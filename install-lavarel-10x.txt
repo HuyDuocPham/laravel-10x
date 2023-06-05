@@ -1,0 +1,37 @@
+I. Do An
+	1, De tai?
+	2, PHP + LAvarel (9x, 10x)
+	3, RDBMD + MYSQL
+	4, CRUD
+	5, Theme beautifull
+II. Lavarel
+1, cmd : cd C:\xampp\htdocts
+2, composer create-project laravel/laravel huyduoc-10x
+note: cai extension Lavarel....
+
+terminal:
+1, php artisan serve
+	copy port
+2, file .env	
+ktr key:
+ktra port:port 3307
+ktra DB:
+	- download git: 
+	terminal :php artisan key:generate
+3, 
+-// Router get + closure
+
+-routes/web.php
+Route::get('test', function () {
+    return '<h1>Test</h1>';
+});
+ --> http://127.0.0.1:8000/test
+
+4: 
+//Router + Controller (routes/web.php)
+php artisan make:controller TestController 
+--> ad TestController vao app/Http/Controller
+	note: use App\Http\Controllers\TestController;
+5, 
+
+php artisan make:controller Admin\ProductCategoryController
