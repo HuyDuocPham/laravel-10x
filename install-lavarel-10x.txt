@@ -35,3 +35,16 @@ php artisan make:controller TestController
 5, 
 
 php artisan make:controller Admin\ProductCategoryController
+
+
+Buoi2: 
+	DOWNLOAD from git:
+			1, composer install
+			2, copy file .env.example --> file .env
+			3, php artisan key:generate
+			4, php artisan serve
+			5, copy link
+	2, template php:  @php @endphp	, @foreach @endforeach, @if @endif
+		echo --> {{$name}}  nete:( co hàm htmlspecialchars)
+		@if @endif --> @emty
+	

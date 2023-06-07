@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProductCategoryController as AdminProductCategoryController;
 use App\Http\Controllers\ProductCategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TestController;
 use Illuminate\Support\Facades\Route;
 
@@ -56,3 +57,28 @@ Route::get('list_category', function () {
 
 
 Route::get('list_category', [ProductCategoryController::class, 'index']);
+
+Route::get('list_user_blade', function () {
+    return view('user.list_user_blade');
+});
+
+Route::get('list_user_blade', [ProductController::class, 'index']);
+
+Route::get('basic_template', function () {
+    return view('user.basic_template');
+});
+
+Route::get('about_us', function () {
+    return view('about_us');
+});
+Route::get('home', function () {
+    return view('home');
+});
+Route::get('contact', function () {
+    return view('contact');
+});
+
+// Lỗi
+Route::get('master', function () {
+    return view('master');
+});
