@@ -37,14 +37,17 @@ php artisan make:controller TestController
 php artisan make:controller Admin\ProductCategoryController
 
 
-Buoi2: 
+Buoi2: Blade Templates Lavarel
 	DOWNLOAD from git:
 			1, composer install
 			2, copy file .env.example --> file .env
 			3, php artisan key:generate
 			4, php artisan serve
 			5, copy link
-	2, template php:  @php @endphp	, @foreach @endforeach, @if @endif
-		echo --> {{$name}}  nete:( co hàm htmlspecialchars)
-		@if @endif --> @emty
+	2, Blade Templates Lavarel: https://laravel.com/docs/10.x/blade  
+		@php @endphp	, @foreach @endforeach, @if @endif
+		echo --> {{$name}}  note:( co hàm htmlspecialchars)
+			hoặc {!!$name!!} không có htmlspecialchars
+		@if{}@endif --> @emty{}
+	3,Examples Bootstrap 5.0: https://getbootstrap.com/docs/5.0/examples/
 	
