@@ -39,6 +39,8 @@ php artisan make:controller Admin\ProductCategoryController
 
 Buoi2: Blade Templates Lavarel
 	DOWNLOAD from git:
+	add extention: laravel Blade, Laravel Extra, Laravel Goto View, Laravel Artisan, 
+			php interlephense
 			1, composer install
 			2, copy file .env.example --> file .env
 			3, php artisan key:generate

@@ -71,14 +71,40 @@ Route::get('basic_template', function () {
 Route::get('about_us', function () {
     return view('about_us');
 });
-Route::get('home', function () {
-    return view('home');
-});
 Route::get('contact', function () {
     return view('contact');
 });
 
-// Lỗi
-Route::get('master', function () {
-    return view('master');
+// CLIENT
+Route::get('home', function () {
+    return view('client.pages.home');
 });
+Route::get('blog', function () {
+    return view('client.pages.blog');
+});
+Route::get('home', function () {
+    return view('client.pages.home');
+});
+Route::get('cart', function () {
+    return view('client.pages.cart');
+});
+Route::get('checout', function () {
+    return view('client.pages.checkout');
+});
+Route::get('contact', function () {
+    return view('client.pages.contact');
+});
+Route::get('product_detail', function () {
+    return view('client.pages.product_detail');
+});
+Route::get('product_list', function () {
+    return view('client.pages.product_list');
+});
+
+//ADMIN
+Route::get('admin', function() {
+    return view('admin.layout.master');
+});
+
+
+
