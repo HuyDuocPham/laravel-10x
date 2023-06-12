@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Client\NguoiDungController;
 use App\Http\Controllers\ProductCategoryController as AdminProductCategoryController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
@@ -78,13 +79,11 @@ Route::get('contact', function () {
 // CLIENT
 Route::get('home', function () {
     return view('client.pages.home');
-});
+})->name('home');
 Route::get('blog', function () {
     return view('client.pages.blog');
 });
-Route::get('home', function () {
-    return view('client.pages.home');
-});
+
 Route::get('cart', function () {
     return view('client.pages.cart');
 });
@@ -105,6 +104,14 @@ Route::get('product_list', function () {
 Route::get('admin', function() {
     return view('admin.layout.master');
 });
+
+
+Route::get('dangky', function() {
+    return view('client.pages.dangky');
+});
+
+Route::post('luuNguoiDung', [NguoiDungController::class,'luuNguoiDung']) ->name('nguoidung.dangky');
+Route::post('dangnhap', [NguoiDungController::class,'dangnhap']) ->name('nguoidung.dangnhap');
 
 
 

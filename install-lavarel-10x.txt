@@ -52,4 +52,21 @@ Buoi2: Blade Templates Lavarel
 			hoặc {!!$name!!} không có htmlspecialchars
 		@if{}@endif --> @emty{}
 	3,Examples Bootstrap 5.0: https://getbootstrap.com/docs/5.0/examples/
-	
+
+Buoi3:
+- function validation lavarel;
+       <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" />
+ 	hoac	@csrf
+- Rules Validation Lavarel
+- any(): if($errors->any()){. . .} : $errors(mặc định của validation lavarel)---> nếu có bất kỳ $errors --> chạy
+- all(): @foreach($errors->all() => $error)
+- old(): (không dùng cho password) : <input value="{{ old('name') }}">
+
+I: Save $request into database (1:Sql Raw, 2:Query Builder, 3:Eloquent)
+1, Sql Raw
+2, Query Builder
+3, Eloquent
+
+
+- mysql: bidding
+- session flash 

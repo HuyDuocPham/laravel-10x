@@ -1,7 +1,9 @@
 @extends('client.layout.master')
 
 @section('content')
-
+        @if(session('message'))
+            <div style="background-color: red"> {{ session('message')}}</div>
+        @endif
     <!-- Hero Section Begin -->
     <section class="hero">
         <div class="container">
