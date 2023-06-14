@@ -10,28 +10,47 @@ use Illuminate\Support\Facades\Hash;
 
 class NguoiDungController extends Controller
 {
-    public function luuNguoiDung ( Request $request) {
-        $request->validate([
-            'email' => 'required|min:3|max:255',
-            'name' => 'required|min:3|max:255',
-            'password' => 'required|min:3|max:20',
-        ],
-    [   
-        'email.email' =>'Email khong duoc dinh dang!',
-        'email.required' =>'Email la bat buoc!',
-        'email.min' =>'Email nho nhat la 3!',
-        'email.max' =>'Email lon nhat la 255!',
-    ]);
+    public function luuNguoiDung(Request $request)
+    {
+        $request->validate(
+            [
+                'email' => 'required|min:3|max:255',
+                'name' => 'required|min:3|max:255',
+                'password' => 'required|min:3|max:20',
+            ],
+            [
+                'email.email' => 'Email khong duoc dinh dang!',
+                'email.required' => 'Email la bat buoc!',
+                'email.min' => 'Email nho nhat la 3!',
+                'email.max' => 'Email lon nhat la 255!',
+            ]
+        );
 
-    // save into database
-    $password = Hash::make($request->password);
-    $check = DB::insert('INSERT INTO nguoidung(name, email, password) VALUES (?, ?, ?)',[$request->name, $request->email, $password]);
-    // sửa .env (DB. . . )
+        // save into database
+        $password = Hash::make($request->password);
+        $check = DB::insert('INSERT INTO nguoidung(name, email, password) VALUES (?, ?, ?)', [$request->name, $request->email, $password]);
+        // sửa .env (DB. . . )
 
-    return redirect()->route('home')->with('message','Dang ky thanh  cong');
+        return redirect()->route('home')->with('message', 'Dang ky thanh  cong');
     }
 
-    public function dangnhap(Request $request) {
-        dd($request->all());
+    public function dangnhap(Request $request)
+    {
+        $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        $user = DB::select("SELECT * FROM nguoidung WHERE email= ?", [$request->email]);
+        if (count($user) && Hash::check($request->password, $user[0]->password)) {
+            session()->push('user', ['id' => $user[0]->id, 'password' => $user[0]->password, 'email' => $user[0]->email,'name' => $user[0]->name]);
+            return redirect()->route('home');
+        };
+        return back()->with('error', 'Email | password khong dung');
+    }
+    public function dangxuat () {
+        // session()->flush();
+        session()->forget('user');
+        return redirect()->route('nguoidung.dangnhap');
     }
 }

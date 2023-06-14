@@ -70,3 +70,27 @@ I: Save $request into database (1:Sql Raw, 2:Query Builder, 3:Eloquent)
 
 - mysql: bidding
 - session flash 
+
+
+Buoi4:
+
+- Dang nhap, dang ky, dang xuat
+- Library: Breeze 
+	https://laravel.com/docs/10.x/starter-kits
+	1, cmd: composer require laravel/breeze --dev 
+		 https://laravel.com/docs/10.x/starter-kits
+		
+	2, cmd:	php artisan breeze:install
+ 
+		
+		npm install
+		npm run dev
+	3, dowmload nodeJS--> reset VS Code
+	4, cmd: php artisan migrate   --> (insert table to DB)
+
+
+
+
+
+
+
