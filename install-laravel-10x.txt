@@ -92,5 +92,23 @@ Buoi4:
 
 
 
+Buoi5: UI/UX, DI/DX --> Migration
 
+cmd: php artisan migrate --> chạy code lên MySQL
+
+{
+	1, download nodejs
+	2, sửa port DB trong .evn
+	3, php artisan migrate 
+	4, php artisan make:migration create_product_category_table
+}
+php artisan make:migration create_product_table
+php artisan make:migration create_product_category_table
+		note: _table. . . 
+php artisan make:migration add_copunm_qty_to_product_table
+
+php artisan migrate:refresh --> chạy lại toàn bộ dữ liệu --> mất hết thông tin.
+
+file: seeders/DatabaseSeeder.php --> \App\Models\::factory(10)->creae();
+php artisan db:seed
 
