@@ -112,3 +112,8 @@ php artisan migrate:refresh --> chạy lại toàn bộ dữ liệu --> mất h�
 file: seeders/DatabaseSeeder.php --> \App\Models\::factory(10)->creae();
 php artisan db:seed
 
+
+Buoi 6: Laravel Middleware, Library Carbon, group route:group+route+name
+php artisan make:middleware IsAdmin
+
+
