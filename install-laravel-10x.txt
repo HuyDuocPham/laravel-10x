@@ -117,3 +117,106 @@ Buoi 6: Laravel Middleware, Library Carbon, group route:group+route+name
 php artisan make:middleware IsAdmin
 
 
+Buoi7: 
+Table Product
+
+1. Product_category
+id(PK)
+name
+status ->default 1 -> 0
+slug
+created_at
+updated_at
+
+2. Product
+id(PK)
+product_category_id(FK) (FK-> references('id') -> on('Product_category'))
+name
+price
+disscount_price
+short_description
+slug
+description
+information
+image_url
+qty
+status
+weight
+shipping
+created_at
+updated_at
+
+
+3. Product_image
+id(PK)
+image_url
+product_id(FK)
+created_at
+updated_at
+
+
+
+Create: 
+1. Form? method POST|GET? action {{ route('('admin.product_category.save')}} ?
+2. Check input? name?
+3. Create ? type button submit?
+4. Make COntroller -> create function()
+	4.1 php artisan make::controller Admin\ProductController
+	4.2 public function store(){}
+	4.3 Route::post('admin/product_category/save', [ProductController::class, 'store'])->name('admin.category.save');
+5. public function store()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
