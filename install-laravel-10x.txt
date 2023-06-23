@@ -157,7 +157,7 @@ created_at
 updated_at
 
 
-Buoi:8 Query Builder
+Buoi:8 Query Builder, JQuery.ajax
 
 
 Create: 
@@ -196,6 +196,7 @@ public function store(Request $request) {
 
 
 - SQL RAW, Query Builder
+
 
 
 
