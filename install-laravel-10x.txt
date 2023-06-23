@@ -112,6 +112,8 @@ php artisan migrate:refresh --> chạy lại toàn bộ dữ liệu --> mất h�
 file: seeders/DatabaseSeeder.php --> \App\Models\::factory(10)->creae();
 php artisan db:seed
 
+php artisan migrate:fresh --seed
+
 
 Buoi 6: Laravel Middleware, Library Carbon, group route:group+route+name
 php artisan make:middleware IsAdmin
@@ -155,16 +157,47 @@ created_at
 updated_at
 
 
+Buoi:8 Query Builder
+
 
 Create: 
 1. Form? method POST|GET? action {{ route('('admin.product_category.save')}} ?
+@csrf
 2. Check input? name?
 3. Create ? type button submit?
-4. Make COntroller -> create function()
-	4.1 php artisan make::controller Admin\ProductController
+4. Make Controller -> create function()
+	4.1 php artisan make:controller Admin\ProductCategoryController
 	4.2 public function store(){}
-	4.3 Route::post('admin/product_category/save', [ProductController::class, 'store'])->name('admin.category.save');
+	4.3 Route::post('admin/product_category/save', [ProductCategoryController::class, 'store'])->name('admin.category.save');
 5. public function store()
+
+public function store(Request $request) {
+	$request->validate();
+	
+	//font-end
+	@error('name')
+		{{$message}}
+	@enderror
+	
+	//save into DB
+	$productCategory = DB::insert();
+	
+}
+
+* use Illuminate\Support\Str;
+* slug url friendly: $slug = Str::slug($request->name);
+	
+
+@section
+	@if(session('message'))
+		{{session('message')}}
+	@endif
+@endsection
+
+
+- SQL RAW, Query Builder
+
+
 
 
 
