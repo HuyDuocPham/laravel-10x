@@ -197,6 +197,71 @@ public function store(Request $request) {
 
 - SQL RAW, Query Builder
 
+- JQuery
+<script type = "text/javascript">
+	$(document).ready(function(){
+		$('#name').on('keyup', function(){
+			let name = $(this).val();
+			$.ajax({
+				method: 'POST',
+				url: "{{ route('admin.product_category.slug')}}",
+				data: {
+					name: name,
+					_token: "{{ crsf_token() }}"
+				},
+				success: function(res){
+					$('#slug').val(res.slug);
+				},
+				error: function(res){
+					//
+				}
+			});
+	})
+})
+</script>
+
+
+
+Buoi 9: Edit Product
+1. /admin/product_category/. . .
+2. web.php
+
+3. ProducCategoryController
+	public function detail($id) {
+	$id
+	select * from product_category where id = 
+	$productCategory = 
+	return view
+
+}
+4. Create view admin.product_category.detail -> copy template admin.product_category.create
+5. Pass data to view and generate HTML
+
+
+--- Edit Product Category
+1. form? method POST|GET action({{ route('admin.product_category.update') }})??
+2. check input in form ? name? 
+3. update button ? submit?
+4. web.php
+	Route::post('admin/product_category/update', [ProductCategoryController::class], 'update')->name('admin.product_category.update');
+
+5. ProductCategoryController.php
+	public function update(Request $request){
+		//validate input from user
+		$request->validate([	
+				'name'=>'required'
+			])
+		//Show error
+		@error('name')
+			{{ $message }}
+		@enderror
+		//update into DB
+		$check = DB::update('update product_category set name = ?, slug = ? where id =? , status = ?', [1,2,3,4]);
+		$message = $check ? 'success' : 'failed';
+		return view('admin.product_category.list')->with('message', $message);
+
+	}
+
 
 
 
