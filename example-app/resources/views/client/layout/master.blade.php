@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
 
     <!-- Css Styles -->
+
     <link rel="stylesheet" href="{{ asset('client/css/bootstrap.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('client/css/font-awesome.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('client/css/elegant-icons.css') }}" type="text/css">
@@ -25,9 +26,9 @@
 
 <body>
     <!-- Page Preloder -->
-    <div id="preloder">
+    {{-- <div id="preloder">
         <div class="loader"></div>
-    </div>
+    </div> --}}
 
     <!-- Humberger Begin -->
     <div class="humberger__menu__overlay"></div>
@@ -91,7 +92,9 @@
     <!-- Header Section Begin -->
     @include('client.pages.header')
     <!-- Header Section End -->
+
     @yield('content')
+
     <!-- Footer Section Begin -->
     @include('client.pages.footer')
     <!-- Footer Section End -->
@@ -105,9 +108,6 @@
     <script src="{{ asset('client/js/mixitup.min.js') }}"></script>
     <script src="{{ asset('client/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('client/js/main.js') }}"></script>
-
-
-
 </body>
 
 </html>

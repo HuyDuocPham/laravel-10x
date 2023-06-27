@@ -1,32 +1,50 @@
 @extends('client.layout.master')
+
 @section('content')
-@if($errors->any())
+<div class="container">
+    @if($errors->any())
     <div>
         <ul>
-            @foreach ($errors->all() as  $error)
-                <li><span style="color:red">{{$error}}</span></li>
+            @foreach ($errors->all() as $error)
+                <li><span style="color:red;">{{ $error }}</span></li>
             @endforeach
         </ul>
     </div>
-@endif
-    <form action="{{ route('nguoidung.dangky') }}" method="POST"
-        style="    display: flex;
-    flex-direction: column;
-    margin: 0 30%;">
-        {{-- <input type="hidden" name="_token" id="csrf-token" value="{{ Session::token() }}" /> --}}
+    @endif
+    <form action="{{ route('nguoidung.dangky') }}" method="POST">
         @csrf
-        <input type="text" name="name" placeholder="Name">
-        @error('name')
-            <span>{{ $message }}</span>
-        @enderror
-        <input type="text" name="email" placeholder="Email">
+          <!-- Name input -->
+          <div class="form-outline mb-4">
+            <input type="text" id="name" class="form-control" name="name" value="{{ old('name') }}"/>
+            <label class="form-label" for="name">Name</label>
+          </div>
+          @error('name')
+                    <div class="alert-danger">{{ $message }}</div>
+            @enderror
+
+
+        <!-- Email input -->
+        <div class="form-outline mb-4">
+          <input type="text" id="form2Example1" class="form-control" name="email" value="{{ old('email') }}"/>
+          <label class="form-label" for="form2Example1">Email address</label>
+        </div>
         @error('email')
-            <span>{{ $message }}</span>
+            <div class="alert-danger">{{ $message }}</div>
         @enderror
-        <input type="password" name="password" placeholder="Password">
+
+        <!-- Password input -->
+        <div class="form-outline mb-4">
+          <input type="password" id="form2Example2" class="form-control" name="password" />
+          <label class="form-label" for="form2Example2">Password</label>
+        </div>
+
         @error('password')
-            <span>{{ $message }}</span>
+                <div class="alert-danger">{{ $message }}</div>
         @enderror
-        <input type="submit" value="Dang Ky">
-    </form>
+
+        <!-- Submit button -->
+        <button type="submit" class="btn btn-primary btn-block mb-4">Dang ky</button>
+      </form>
+</div>
 @endsection
+

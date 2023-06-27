@@ -106,9 +106,7 @@
                             // console.log(res);
                             $('#slug').val(res.slug);
                         },
-                        error: function(res) {
-
-                        }
+                        error: function(res) {}
                     });
                     //alert(value);
                 });

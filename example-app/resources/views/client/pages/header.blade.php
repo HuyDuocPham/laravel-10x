@@ -35,10 +35,11 @@
                             <a href="#"><i class="fa fa-user"></i> {{ $name }}</a>
 
                             @if(session()->has('user'))
-                                <a href="" onclick="event.preventDefault(); document.getElementById('form-loagout').submit();">
-                                    Dang Xuat
+                                <a href="#" onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                                    Dang xuat
                                 </a>
-                                <form id="form-loagout" action="{{ route('nguoidung.dangxuat') }}" method="POST" style="display: none" >
+                                <form id="frm-logout" action="{{ route('nguoidung.dangxuat') }}"
+                                method="POST" style="display: none;">
                                     @csrf
                                 </form>
                             @endif

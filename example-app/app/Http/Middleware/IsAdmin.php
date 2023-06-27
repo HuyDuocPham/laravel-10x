@@ -4,9 +4,8 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
-
+use Symfony\Component\HttpFoundation\Response;
 
 class IsAdmin
 {
@@ -17,23 +16,10 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-
-        //Get Current User 
-        // if(!Auth::check()) {
-        //     return redirect()->route('login');
-        // }
-        // $user= Auth::user();
-        // if($user->role ===1) {
-        //     return $next($request);
-        // } else 
-        // {
-        //     return redirect()->route('home');
-        // }
-
-        //
-        if(Auth::check() && Auth::user()->role) {
+        if(Auth::check() && Auth::user()->role){
             return $next($request);
         }
+
         return redirect()->route('login');
     }
 }
