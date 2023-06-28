@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('product_category', function (Blueprint $table) {
-            $table->string('slug', 255)->nullable();
+        Schema::table('users', function (Blueprint $table) {
+            $table->dateTime('dob')->nullable();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('product_category', function (Blueprint $table) {
-            //
+        Schema::table('users', function (Blueprint $table) {
+            
         });
     }
 };

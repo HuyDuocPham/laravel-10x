@@ -83,22 +83,23 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
         return view('admin.product.create');
     })->name('product.create');
 
-    Route::get('admin/product_category', function () {
-        return view('admin.product_category.list');
-    })->name('product_category.list');
-
+    
     Route::get('admin/product_category/create', function () {
         return view('admin.product_category.create');
     })->name('product_category.create');
-
+    
+    Route::get('admin/product_category', [ProductCategoryController::class, 'index'])
+        ->name('product_category.list');
     Route::post('admin/product_category/save', [ProductCategoryController::class, 'store'])
         ->name('product_category.save');
     Route::post('admin/product_category/slug', [ProductCategoryController::class, 'getSlug'])
         ->name('product_category.slug');
+    Route::get('admin/product_category/{id}', [ProductCategoryController::class, 'detail'])
+        ->name('product_category.detail');
+    Route::post('admin/product_category/update/{id}', [ProductCategoryController::class, 'update'])
+        ->name('product_category.update');
+        Route::post('admin/product_category/delete/{id}', [ProductCategoryController::class, 'destroy'])
+        ->name('product_category.delete');
 
 
-    Route::get('admin/product_category/list', [ProductCategoryController::class, 'index'])
-        ->name('product_category.list');
-    Route::get('admin/product_category/create', [ProductCategoryController::class, 'store'])
-        ->name('product_category.create');
 });
