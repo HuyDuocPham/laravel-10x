@@ -264,7 +264,33 @@ Buoi 9: Edit Product
 
 
 
+Buoi 10: Custom pagination, Library: Ckeditor, MVC: Model
+- Library Font-End(Bootstrap, tailwind. . .):
+	Vendor/laravel/framework/src/pagination/resource/views
+- Custom pagination: {{$productCategories ->links('admin.pagination.custom')}}
 
+1. Model
+2. Eloquent (SQL RAW, Query Builder, Eloquent)
+	ORM: Object Reletional Mapping
+3. Install Extensions Google: Fale Filler
+
+- Product: 
+CRUD:
+	C: Create + create() + store()
+	R: Get list + get Detail + index() + show()
+	U: Update + update()
+	D: Delete + destroy()
+- php artisan make:controller Admin\ProductController --resource
+
+- Web.php 
+	Route::resource('admin/product', ProductController::class);
+ 		-------> tu tao ra tat ca cac  route cua ProductController
+- WYSWYG: what you see, what you get <==== Library textEditor: Ckeditor
+- MVC: php artisan make:model Product
+
+- Model:
+	protected $table = 'product';
+	public $fillable =[];
 
 
 

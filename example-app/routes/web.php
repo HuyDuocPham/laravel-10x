@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ProductCategoryController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\ProfileController;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -30,9 +31,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
+// Route::get('home', function (){
+//     return '<h1>Home</h1>';
+// });
+
+// Route::get('admin', function (){
+//     return '<h1>Admin</h1>';
+// })->name('admin');
+
 require __DIR__ . '/auth.php';
-
-
 
 Route::get('home', function () {
     return view('client.pages.home');
@@ -75,31 +84,45 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
         return view('admin.pages.blog');
     })->name('blog');
 
-    Route::get('admin/product', function () {
-        return view('admin.pages.product');
-    })->name('product');
 
-    Route::get('admin/product/create', function () {
-        return view('admin.product.create');
-    })->name('product.create');
+    //Product
+    // Route::get('admin/product', function () {
+    //     return view('admin.pages.product');
+    // })->name('product');
 
-    
+    Route::resource('admin/product', ProductController::class); // Tự tạo ra tất cả các route của ProductController
+
+
+
+
+    //Product_Category
+    Route::get('admin/product_category', [ProductCategoryController::class, 'index'])->name('product_category.list');
+
     Route::get('admin/product_category/create', function () {
         return view('admin.product_category.create');
     })->name('product_category.create');
-    
-    Route::get('admin/product_category', [ProductCategoryController::class, 'index'])
-        ->name('product_category.list');
+
     Route::post('admin/product_category/save', [ProductCategoryController::class, 'store'])
         ->name('product_category.save');
+
     Route::post('admin/product_category/slug', [ProductCategoryController::class, 'getSlug'])
         ->name('product_category.slug');
-    Route::get('admin/product_category/{id}', [ProductCategoryController::class, 'detail'])
-        ->name('product_category.detail');
+
+    Route::get('admin/product_category/{id}', [ProductCategoryController::class, 'detail'])->name('product_category.detail');
+
     Route::post('admin/product_category/update/{id}', [ProductCategoryController::class, 'update'])
         ->name('product_category.update');
-        Route::post('admin/product_category/delete/{id}', [ProductCategoryController::class, 'destroy'])
+
+    Route::post('admin/product_category/delete/{id}', [ProductCategoryController::class, 'destroy'])
         ->name('product_category.delete');
+});
 
 
+
+Route::get('chivas', function () {
+    return '<h1>chivas</h1>';
+})->middleware('age.18');
+
+Route::get('cocacola', function () {
+    return '<h1>cocacola</h1>';
 });
