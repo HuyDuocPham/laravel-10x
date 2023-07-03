@@ -119,10 +119,3 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
 
 
 
-Route::get('chivas', function () {
-    return '<h1>chivas</h1>';
-})->middleware('age.18');
-
-Route::get('cocacola', function () {
-    return '<h1>cocacola</h1>';
-});

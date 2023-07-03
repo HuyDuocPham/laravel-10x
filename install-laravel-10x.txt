@@ -294,8 +294,42 @@ CRUD:
 
 
 
+Buoi 10: Builder query: JOIN
+
+--------- Model ProductCategory
+1, Make Model: 
+	php artisan make:model ProductCategory
+2, Define table 
+protected $table = 'product_category';
+3, Retrieve(GET) all records
+$productCategories = ProductCategory::all();
+$productCategories = ProductCategory::where('status', 1)->get();
+
+---------- Product List
+<a class="btn btn-primary"href="{{ route('admin.product_category.create') }}">Create</a> 
+1, Template List
+2, Get all record product
+3. Admin\ProductController.php
+	public function index(){
+		$products = App\Models\Product::add();
+		return view('admin.product.list',['products' => $products]);
+	}
+4. admin/product/list.blade.php 
+	foreach($products as $product)
 
 
+
+
+1 product se thuoc 1 category nao do ------->belongsTo();
+    public function category()
+    {
+        return $this->belongsTo(ProductCategory::class, 'product_category_id');
+    }
+1 category se chua nhieu product -------> hasMany();
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'product_category_id');
+    }
 
 
 

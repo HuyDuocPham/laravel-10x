@@ -10,7 +10,7 @@ class Product extends Model
     use HasFactory;
 
     protected $table = 'product'; // Chỉ định class Product  tương tác với table tên 'product'
-    // protected $primaryKey = 'id'; //default
+    protected $primaryKey = 'id'; //default
 
     public $fillable = [
         'id',
@@ -25,7 +25,12 @@ class Product extends Model
         'shipping',
         'weight',
         'status',
-        'product_category_id ',
+        'image_url',
+        'product_category_id',
     ];
 
+    public function category()
+    {
+        return $this->belongsTo(ProductCategory::class, 'product_category_id');
+    }
 }

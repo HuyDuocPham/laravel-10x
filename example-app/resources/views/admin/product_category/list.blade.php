@@ -21,7 +21,7 @@
                 <div class="card-header">
                   <h3 class="card-title">Product Category</h3>
                   <div class="d-flex justify-content-end">
-                    <a class="btn btn-primary"href="{{ route('admin.product_category.create') }}">Create</a>
+                    <a class="btn btn-primary"href="{{ route('admin.product_category.create') }}">Create Product Category</a>
                 </div>
                 </div>
                 <!-- /.card-header -->
