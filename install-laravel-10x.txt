@@ -357,6 +357,10 @@ Template + Form Edit Product
 - @method('DELETE')
 
 
+- php artisan make:request StoreProductRequest
+
+
+
 
 
 
