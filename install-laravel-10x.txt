@@ -334,8 +334,27 @@ $productCategories = ProductCategory::where('status', 1)->get();
 
 
 
+Buoi 11: - Third-party: S3(S: simple,S: storage, S: servire)-Amazon
+	 - Cloudinary
+
+Template + Form Edit Product
+1. Copy template Create
+2. php artisan route:list --> admin.product.show
+3. admin\ProductController.php
+ function show(string $id) {
+	//SQL RAW
+	$product = DB::select('SELECT * FROM product WHERE id = ?', [$id]);
+
+	//Query Builder
+	$product = DB::table('product')->where('id',$product_>id);
+	
+	//Eloquent
+	$product = Product::find($id);
+}
 
 
+- @method('PUT')
+- @method('DELETE')
 
 
 

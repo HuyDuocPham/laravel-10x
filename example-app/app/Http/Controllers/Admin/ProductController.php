@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreProductRequest;
 use Illuminate\Support\Facades\DB;
 
 
@@ -14,17 +15,27 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {   
+    public function index(Request $request)
+    {
+
+
+        $keyword = $request->keyword;
+        $products = Product::query();
+        if (is_null($keyword)) {
+            $products = Product::paginate(5);
+        } else {
+            $products = Product::where('name', 'like', '%' . $keyword . '%')->paginate(5);
+        }
         //Eloquent
         // $products = Product::all(); //Nếu dùng hàm link phải đổi all()->paginate
-        $products = Product::paginate(5); //paginate(config(myconfig.item_per_page))
+        // $products = Product::paginate(5); //paginate(config(myconfig.item_per_page))
 
         //Query Builder
         // $products = DB::table('product')
         //     ->join('product_category', 'product_category.id', '=', 'product.product_category_id')
         //     ->select('product.*', 'product_category.name as product_category_name')
         //     ->paginate(5); //paginate(config(myconfig.item_per_page))
+
 
         return view('admin.product.list', ['products' => $products]);
     }
@@ -45,14 +56,16 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
 
         //validate
-        $request->validate([
-            'name' => 'required',
-        ]);
+        // $request->validate([
+        //     'name' => 'required',
+        //     'product_category_id' => 'required'
+        // ]); // move Http/Request/StoreProductRequest
 
+        $fileName = null;
         if ($request->hasFile('image_url')) {
             $originName = $request->file('image_url')->getClientOriginalName();
             $fileName = pathinfo($originName, PATHINFO_FILENAME);
@@ -89,7 +102,18 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        //
+
+        // //SQL RAW
+        // $product = DB::select('SELECT * FROM product WHERE id = ?', [$id]);
+
+        // //Query Builder
+        // $product = DB::table('product')->where('id',$id)->first();
+
+        //Eloquent
+        $product = Product::find($id);
+        $productCategories = ProductCategory::where('status', 1)->get();
+
+        return view('admin.product.edit', ['product' => $product, 'productCategories' => $productCategories]);
     }
 
     /**
@@ -105,14 +129,61 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'product_category_id' => 'required'
+        ]);
+        $product = Product::find($id);
+
+        $fileName = $product->image_url;
+        if ($request->hasFile('image_url')) {
+            $originName = $request->file('image_url')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('image_url')->getClientOriginalExtension();
+            $fileName = $fileName . '_' . time() . '.' . $extension;
+            $request->file('image_url')->move(public_path('images'), $fileName);
+
+            //remove old image
+            if (!is_null($product->image_url) && file_exists("images/" . $product->image_url)) {
+                unlink("images/" . $product->image_url);
+            }
+        }
+
+        $check = $product->update([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'price' => $request->price,
+            'discount_price' => $request->discount_price,
+            'description' => $request->description,
+            'short_description' => $request->short_description,
+            'information' => $request->information,
+            'qty' => $request->qty,
+            'shipping' => $request->shipping,
+            'weight' => $request->weight,
+            'status' => $request->status,
+            'product_category_id' => $request->product_category_id,
+            'image_url' => $fileName,
+        ]);
+
+        $message = $check ? 'Update success' : 'Update failed';
+        return redirect()->route('admin.product.index')->with('message', $message);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    // public function destroy(string $id)
+    // {
+    //     $product = Product::find($id);
+    //     $check = $product->delete();
+    //     $message = $check ? 'Delete success' : 'Delete failed';
+    //     return redirect()->route('admin.product.index')->with('message', $message);
+    // }
+    public function destroy(Product $product)
     {
-        //
+        // $product = Product::find($id);
+        $check = $product->delete();
+        $message = $check ? 'Delete success' : 'Delete failed';
+        return redirect()->route('admin.product.index')->with('message', $message);
     }
 }

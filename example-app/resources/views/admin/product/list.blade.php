@@ -19,7 +19,14 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h3 class="card-title">Product</h3>
+                                <h3 class="card-title">Product</h3> <br>
+                                <div>
+                                    <form method="GET">
+                                        <input type="text" placeholder="Search..."
+                                            value="{{ is_null(request()->keyword) ? '' : request()->keyword }}">
+                                        <button type="submit">Search</button>
+                                    </form>
+                                </div>
                                 <div class="d-flex justify-content-end">
                                     <a class="btn btn-primary"href="{{ route('admin.product.create') }}">Create Product</a>
                                 </div>
@@ -76,8 +83,11 @@
                                                     <form method="post"
                                                         action="{{ route('admin.product.destroy', ['product' => $product->id]) }}">
                                                         @csrf
+                                                        @method('DELETE')
+
                                                         <a href="{{ route('admin.product.show', ['product' => $product->id]) }}"
                                                             class="btn btn-primary">Edit</a>
+
                                                         <button onclick="return confirm('Are you sure?')" type="submit"
                                                             class="btn btn-danger">Delete</button>
                                                     </form>
@@ -93,7 +103,7 @@
                             </div>
                             <!-- /.card-body -->
                             <div class="card-footer clearfix">
-                                {{ $products->links() }}
+                                {{ $products->appends(request()->query())->links() }}
                             </div>
                         </div>
                         <!-- /.card -->
