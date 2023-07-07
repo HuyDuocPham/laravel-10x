@@ -360,10 +360,13 @@ Template + Form Edit Product
 - php artisan make:request StoreProductRequest
 
 
+Buoi 12: JQueryui.com: https://jqueryui.com/slider/#range
 
-
-
-
+- input search(filter):keyword, price range, sort by price
+- onDelete('cascade')
+- Tạo dữ liệu mẫu 
+	php artisan make:factory ProductCategoryFactory
+	php artisan make:factory ProductFactory
 
 
 

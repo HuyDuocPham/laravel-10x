@@ -19,13 +19,60 @@ class ProductController extends Controller
     {
 
 
-        $keyword = $request->keyword;
         $products = Product::query();
-        if (is_null($keyword)) {
-            $products = Product::paginate(5);
-        } else {
-            $products = Product::where('name', 'like', '%' . $keyword . '%')->paginate(5);
+        $keyword = $request->keyword;
+        $status = $request->status;
+        $amountStart = $request->amount_start;
+        $amountEnd = $request->amount_end;
+        $sort =  $request->sort;
+
+        $filter = [];
+        //Search by keyword
+        if (!is_null($keyword)) {
+            $filter[] = ['name', 'like', '%' . $keyword . '%'];
         }
+        //Search by status
+        if (!is_null($status)) {
+            $filter[] = ['status', $status];
+        }
+        //Search by price
+        if (!is_null($amountStart) && !is_null($amountEnd)) {
+            $filter[] = ['price', '>=', $amountStart];
+            $filter[] = ['price', '<=', $amountEnd];
+        }
+
+        //Sort
+        $sortBy = ['id', 'desc'];
+        switch ($sort) {
+            // case 0:
+            //     $sortBy = ['id', 'desc'];
+            //     break;
+            case 1:
+                $sortBy = ['price', 'asc'];
+                break;
+            case 2:
+                $sortBy = ['price', 'desc'];
+                break;
+                default : 
+        }
+
+
+        // $products = Product::where($filter)->paginate(5);
+
+        $products = Product::where($filter)->orderBy($sortBy[0], $sortBy[1])->paginate(5);
+        $maxPrice = Product::max('price');
+        $minPrice = Product::min('price');
+
+
+
+        // if (is_null($keyword)) {
+        //     $products = Product::paginate(5);
+        // } else {
+        //     $products = Product::where('name', 'like', '%' . $keyword . '%')->paginate(5);
+        // }
+
+
+
         //Eloquent
         // $products = Product::all(); //Nếu dùng hàm link phải đổi all()->paginate
         // $products = Product::paginate(5); //paginate(config(myconfig.item_per_page))
@@ -37,7 +84,11 @@ class ProductController extends Controller
         //     ->paginate(5); //paginate(config(myconfig.item_per_page))
 
 
-        return view('admin.product.list', ['products' => $products]);
+        return view('admin.product.list', [
+            'products' => $products,
+            'maxPrice' => $maxPrice,
+            'minPrice' => $minPrice
+        ]);
     }
 
     /**
@@ -94,7 +145,9 @@ class ProductController extends Controller
             'image_url' => $fileName,
         ]);
 
-        return redirect()->route('admin.product.index');
+        $message = $product ? 'Create product success' : 'Create failed';
+
+        return redirect()->route('admin.product.index')->with('message', $message);
     }
 
     /**

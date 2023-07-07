@@ -10,8 +10,8 @@ class ProductCategory extends Model
     use HasFactory;
     protected $table = 'product_category';
 
-    public function products()
-    {
+    public function products() // muốn dùng products phải dùng Query Builder
+    {   
         return $this->hasMany(Product::class, 'product_category_id');
     }
 }

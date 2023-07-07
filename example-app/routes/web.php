@@ -116,5 +116,3 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
     Route::post('admin/product_category/delete/{id}', [ProductCategoryController::class, 'destroy'])
         ->name('product_category.delete');
 });
-
-

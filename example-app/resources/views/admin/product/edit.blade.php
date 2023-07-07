@@ -116,6 +116,11 @@
                                             @endforeach
                                         </select>
                                     </div>
+                                    <div>
+                                        @error('product_category_id')
+                                            <small style="color: red">{{ $message }}</small>
+                                        @enderror
+                                    </div>
                                     <div class="form-group">
                                         <label for="exampleInputFile">Image</label>
                                         <div class="input-group">

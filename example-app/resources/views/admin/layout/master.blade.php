@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="{{ asset('backend/plugins/summernote/summernote-bs4.css') }}">
     <!-- Google Font: Source Sans Pro -->
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -213,6 +214,12 @@
                                     </a>
                                 </li>
                                 <li class="nav-item">
+                                    <a href="{{ route('admin.product_category.list') }}" class="nav-link">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Product Category</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
                                     <a href="/admin/user" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Blog</p>
@@ -261,8 +268,8 @@
     <!-- Sparkline -->
     <script src="{{ asset('backend/plugins/sparklines/sparkline.js') }}"></script>
     <!-- JQVMap -->
-    <script src="{{ asset('backend/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
-    <script src="{{ asset('backend/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
+    {{-- <script src="{{ asset('backend/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
+    <script src="{{ asset('backend/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script> --}}
     <!-- jQuery Knob Chart -->
     <script src="{{ asset('backend/plugins/jquery-knob/jquery.knob.min.js') }}"></script>
     <!-- daterangepicker -->
@@ -277,7 +284,7 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('backend/dist/js/adminlte.js') }}"></script>
     <!-- AdminLTE dashboard demo (This is only for demo purpplugins/jquery/jquery.min.jsoses) -->
-    <script src="{{ asset('backend/dist/js/pages/dashboard.js') }}"></script>
+    {{-- <script src="{{ asset('backend/dist/js/pages/dashboard.js') }}"></script> --}}
     <!-- AdminLTE for demo purposes -->
     <script src="{{ asset('backend/dist/js/demo.js') }}"></script>
     <!-- CkeEditor 5 -->
