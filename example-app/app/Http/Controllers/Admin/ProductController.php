@@ -8,6 +8,10 @@ use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreProductRequest;
 use Illuminate\Support\Facades\DB;
+use Closure;
+use App\Models\User;
+use Illuminate\Support\Facades\Pipeline;
+
 
 
 class ProductController extends Controller
@@ -17,61 +21,77 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        // $products = Product::query();
+        // $keyword = $request->keyword;
+        // $status = $request->status;
+        // $amountStart = $request->amount_start;
+        // $amountEnd = $request->amount_end;
+        // $sort =  $request->sort;
 
+        // $filter = [];
+        // //Search by keyword
+        // if (!is_null($keyword)) {
+        //     $filter[] = ['name', 'like', '%' . $keyword . '%'];
+        // }
+        // //Search by status
+        // if (!is_null($status)) {
+        //     $filter[] = ['status', $status];
+        // }
+        // //Search by price
+        // if (!is_null($amountStart) && !is_null($amountEnd)) {
+        //     $filter[] = ['price', '>=', $amountStart];
+        //     $filter[] = ['price', '<=', $amountEnd];
+        // }
 
-        $products = Product::query();
-        $keyword = $request->keyword;
-        $status = $request->status;
-        $amountStart = $request->amount_start;
-        $amountEnd = $request->amount_end;
-        $sort =  $request->sort;
+        // //Sort
+        // $sortBy = ['id', 'desc'];
+        // switch ($sort) {
+        //         // case 0:
+        //         //     $sortBy = ['id', 'desc'];
+        //         //     break;
+        //     case 1:
+        //         $sortBy = ['price', 'asc'];
+        //         break;
+        //     case 2:
+        //         $sortBy = ['price', 'desc'];
+        //         break;
+        //     default:
+        // }
 
-        $filter = [];
-        //Search by keyword
-        if (!is_null($keyword)) {
-            $filter[] = ['name', 'like', '%' . $keyword . '%'];
-        }
-        //Search by status
-        if (!is_null($status)) {
-            $filter[] = ['status', $status];
-        }
-        //Search by price
-        if (!is_null($amountStart) && !is_null($amountEnd)) {
-            $filter[] = ['price', '>=', $amountStart];
-            $filter[] = ['price', '<=', $amountEnd];
-        }
+        // Pipe Parten Design    
+        // $user = Pipeline::send($user)
+        //     ->through([
+        //         function (User $user, Closure $next) {
+        //             // ...
 
-        //Sort
-        $sortBy = ['id', 'desc'];
-        switch ($sort) {
-            // case 0:
-            //     $sortBy = ['id', 'desc'];
-            //     break;
-            case 1:
-                $sortBy = ['price', 'asc'];
-                break;
-            case 2:
-                $sortBy = ['price', 'desc'];
-                break;
-                default : 
-        }
+        //             return $next($user);
+        //         },
+        //         function (User $user, Closure $next) {
+        //             // ...
 
+        //             return $next($user);
+        //         },
+        //     ])
+        //     ->then(fn (User $user) => $user);
+
+        $pipelines = [
+            \App\Filters\ByKeyword::class,
+            \App\Filters\ByMinMax::class,
+            \App\Filters\ByStatus::class,
+        ];
+        $pipeline = Pipeline::send(Product::query()->withTrashed())
+            ->through($pipelines)
+            ->thenReturn();
+        $products = $pipeline->paginate(5);
 
         // $products = Product::where($filter)->paginate(5);
-
-        $products = Product::where($filter)->orderBy($sortBy[0], $sortBy[1])->paginate(5);
-        $maxPrice = Product::max('price');
-        $minPrice = Product::min('price');
-
-
+        // // $products = Product::where($filter)->orderBy($sortBy[0], $sortBy[1])->paginate(5);
 
         // if (is_null($keyword)) {
         //     $products = Product::paginate(5);
         // } else {
         //     $products = Product::where('name', 'like', '%' . $keyword . '%')->paginate(5);
         // }
-
-
 
         //Eloquent
         // $products = Product::all(); //Nếu dùng hàm link phải đổi all()->paginate
@@ -83,7 +103,8 @@ class ProductController extends Controller
         //     ->select('product.*', 'product_category.name as product_category_name')
         //     ->paginate(5); //paginate(config(myconfig.item_per_page))
 
-
+        $maxPrice = Product::max('price');
+        $minPrice = Product::min('price');
         return view('admin.product.list', [
             'products' => $products,
             'maxPrice' => $maxPrice,
@@ -238,5 +259,16 @@ class ProductController extends Controller
         $check = $product->delete();
         $message = $check ? 'Delete success' : 'Delete failed';
         return redirect()->route('admin.product.index')->with('message', $message);
+    }
+
+    public function restore(string $product)
+    {
+        $product = Product::withTrashed()->find($product);
+        //Cach 1:
+        // $product->deleted_at = null;
+        // $product->save();
+
+        $product->restore();
+        return redirect()->route('admin.product.index')->with('message', 'Restore success');
     }
 }

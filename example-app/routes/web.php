@@ -91,7 +91,7 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
     // })->name('product');
 
     Route::resource('admin/product', ProductController::class); // Tự tạo ra tất cả các route của ProductController
-
+    Route::post('admin/product/restore/{product}', [ProductController::class, 'restore'])->name('product.restore');
 
 
 

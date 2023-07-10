@@ -126,6 +126,24 @@
 
                                                         <button onclick="return confirm('Are you sure?')" type="submit"
                                                             class="btn btn-danger">Delete</button>
+                                                        {{-- <form
+                                                            action="{{ route('admin.product.restore', ['product' => $product->id]) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            <button
+                                                                style="display: {{ is_null($product->deleted_at) ? 'none' : 'block' }}"
+                                                                class="btn btn-primary">Restore</button>
+                                                        </form> --}}
+                                                        @if ($product->trashed())
+                                                            <form
+                                                                action="{{ route('admin.product.restore', ['product' => $product->id]) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                <button
+                                                                    style="display: {{ is_null($product->deleted_at) ? 'none' : 'block' }}"
+                                                                    class="btn btn-primary">Restore</button>
+                                                            </form>
+                                                        @endif
                                                     </form>
                                                 </td>
                                             </tr>
@@ -160,12 +178,12 @@
                 values: [{{ request()->amount_start ?? 0 }}, {{ request()->amount_end ?? 1000 }}],
                 slide: function(event, ui) {
                     $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
-                    $('#amount_start').val(ui.values[0]);
-                    $('#amount_end').val(ui.values[1]);
                 }
             });
             $("#amount").val("$" + $("#slider-range").slider("values", 0) +
                 " - $" + $("#slider-range").slider("values", 1));
+            $('#amount_start').val($("#slider-range").slider("values", 0));
+            $('#amount_end').val($("#slider-range").slider("values", 1));
         });
     </script>
 @endsection
