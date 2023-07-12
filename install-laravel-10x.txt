@@ -386,8 +386,16 @@ Buoi 13: Pipeline Partern Design, softDeletes(), onDelete('cascade'), withTrashe
 - restore
 
 
+Buoi 14: Library Datatables of javascript, Eager Loading, View Composer
+- Eager Loading: <== N + 1 problem
+- Laravel debugg bar
+- sortDelete chỉ dùng được với eloquent
 
-
+- Library Datatables: 
+	library datatables ---> use client: search, sort.... -->client
+	
+- use App\Http\Controllers\Client\ProductController as ClientProductController;
+- View Composer
 
 
 

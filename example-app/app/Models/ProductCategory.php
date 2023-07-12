@@ -13,6 +13,6 @@ class ProductCategory extends Model
 
     public function products() // muốn dùng products phải dùng Query Builder
     {
-        return $this->hasMany(Product::class, 'product_category_id');
+        return $this->hasMany(Product::class, 'product_category_id')->withTrashed();
     }
 }

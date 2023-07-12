@@ -139,9 +139,7 @@
                                                                 action="{{ route('admin.product.restore', ['product' => $product->id]) }}"
                                                                 method="POST">
                                                                 @csrf
-                                                                <button
-                                                                    style="display: {{ is_null($product->deleted_at) ? 'none' : 'block' }}"
-                                                                    class="btn btn-primary">Restore</button>
+                                                                <button class="btn btn-primary">Restore</button>
                                                             </form>
                                                         @endif
                                                     </form>

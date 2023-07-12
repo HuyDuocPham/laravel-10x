@@ -120,8 +120,12 @@ class ProductCategoryController extends Controller
         //SQL RAW
         // $check = DB::delete('delete from product_category where id = ?', [$id]);
 
-        //Query Builder
-        $check = DB::table('product_category')->where('id', $id)->delete();
+        //Query Builder : không dùng được sort Delete
+        // $check = DB::table('product_category')->where('id', $id)->delete();
+
+        //Eloquent mới dùng được sort delete
+        $productCategory = ProductCategory::find($id);
+        $check = $productCategory->delete();
 
         $message = $check ? 'delete success' : 'delete failed';
         //redirect to list product category page with message ( session flash )

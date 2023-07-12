@@ -267,7 +267,7 @@ class ProductController extends Controller
         //Cach 1:
         // $product->deleted_at = null;
         // $product->save();
-
+        
         $product->restore();
         return redirect()->route('admin.product.index')->with('message', 'Restore success');
     }
