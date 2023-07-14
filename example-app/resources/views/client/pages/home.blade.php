@@ -137,7 +137,10 @@
                                 <ul class="featured__item__pic__hover">
                                     <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                     <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                    <li><a href="#" class="add-to-cart"
+                                            data-url="{{ route('product.add-to-cart', ['productId' => $product->id]) }}"><i
+                                                class="fa fa-shopping-cart"></i></a>
+                                    </li>
                                 </ul>
                             </div>
                             <div class="featured__item__text">
@@ -543,4 +546,26 @@
         </div>
     </section>
     <!-- Blog Section End -->
+@endsection
+@section('js-custom')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.add-to-cart').on('click', function(event) {
+                event.preventDefault();
+                var url = $(this).data('url');
+                $.ajax({
+                    method: 'GET',
+                    url: url, // action of form
+                    success: function(res) {
+                        swal({
+                            title: "Good job!",
+                            text: "You clicked the button!",
+                            icon: "Success",
+                            button: "Ok",
+                        });
+                    },
+                });
+            })
+        })
+    </script>
 @endsection

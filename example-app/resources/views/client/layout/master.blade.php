@@ -22,6 +22,8 @@
     <link rel="stylesheet" href="{{ asset('client/css/owl.carousel.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('client/css/slicknav.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('client/css/style.css') }}" type="text/css">
+    {{-- SweetAlert --}}
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 
 <body>
@@ -108,6 +110,8 @@
     <script src="{{ asset('client/js/mixitup.min.js') }}"></script>
     <script src="{{ asset('client/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('client/js/main.js') }}"></script>
+
+    @yield('js-custom')
 </body>
 
 </html>

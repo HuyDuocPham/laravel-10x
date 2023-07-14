@@ -400,11 +400,31 @@ Buoi 14: Library Datatables of javascript, Eager Loading, View Composer
 
 
 
+Buoi 15: view composer: 
+- 1, php artisan make:provider ComposerServiceProvider
+- 2, file app.php :         App\Providers\ComposerServiceProvider::class,
+- 3,     public function boot(): void
+    {
+        View::composer('*', function ($view) {
+            return $view->with('phamhuyduoc', 'Pham Huy Duoc');
+        });
+    }
 
+== CART
+1, add product to cart
+Business logic : ? 
+	DMX(dienmayxanh): not login -> add product to cart
+	SHoppe : logged -> add product to cart
 
-
-
-
+-- add to cart:
+	- session
+	- database
+	
+	1, Click icon cart -> add product to cart
+	$cart = [];
+	2, make:controller
+	3, Route::get('/product/add-to-cart/{productId}', [])->name();
+	4, Ajax -> GET
 
 
 

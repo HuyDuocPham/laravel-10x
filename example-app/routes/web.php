@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
 use App\Http\Controllers\ProfileController;
@@ -52,6 +53,10 @@ require __DIR__ . '/auth.php';
 Route::get('home', [HomeController::class, 'index'])->name('home');
 Route::get('product/{slug}', [ClientProductController::class, 'getProductBySlug'])->name('product.detail');
 
+// Cart
+Route::get('/product/add-to-cart/{productId}', [CartController::class, 'addProductToCart'])->name('product.add-to-cart');
+Route::get('cart', [CartController::class, 'index'])->name('client.pages.cart');
+
 Route::get('about-us', function () {
     return view('about_us');
 });
@@ -62,13 +67,11 @@ Route::get('contact', function () {
 Route::get('blog', function () {
     return view('client.pages.blog');
 });
+
 Route::get('product-list', function () {
     return view('client.pages.product_list');
 });
 
-Route::get('cart', function () {
-    return view('client.pages.cart');
-});
 Route::get('checkout', function () {
     return view('client.pages.checkout');
 });
@@ -118,4 +121,9 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
 
     Route::post('admin/product_category/delete/{id}', [ProductCategoryController::class, 'destroy'])
         ->name('product_category.delete');
+});
+
+
+Route::get('test', function () {
+    return view('test');
 });
