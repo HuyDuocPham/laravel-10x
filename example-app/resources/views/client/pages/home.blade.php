@@ -138,7 +138,7 @@
                                     <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                     <li><a href="#"><i class="fa fa-retweet"></i></a></li>
                                     <li><a href="#" class="add-to-cart"
-                                            data-url="{{ route('product.add-to-cart', ['productId' => $product->id]) }}"><i
+                                            data-url="{{ route('cart.add-to-cart', ['productId' => $product->id]) }}"><i
                                                 class="fa fa-shopping-cart"></i></a>
                                     </li>
                                 </ul>
@@ -547,6 +547,7 @@
     </section>
     <!-- Blog Section End -->
 @endsection
+
 @section('js-custom')
     <script type="text/javascript">
         $(document).ready(function() {
@@ -558,10 +559,8 @@
                     url: url, // action of form
                     success: function(res) {
                         swal({
-                            title: "Good job!",
-                            text: "You clicked the button!",
                             icon: "Success",
-                            button: "Ok",
+                            text: res.message,
                         });
                     },
                 });

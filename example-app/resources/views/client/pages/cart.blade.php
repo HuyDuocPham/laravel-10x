@@ -85,11 +85,11 @@
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Total</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($cart as $item)
+                                @php $totalPrice = 0; @endphp
+                                @foreach ($cart as $productId => $item)
                                     <tr>
                                         <td class="shoping__cart__item">
                                             <img src="img/cart/cart-1.jpg" alt="">
@@ -109,9 +109,10 @@
                                             $ {{ number_format($item['price'] * $item['qty'], 2) }}
                                         </td>
                                         <td class="shoping__cart__item__close">
-                                            <span class="icon_close"></span>
+                                            <span data-id="{{ $productId }}" class="icon_close"></span>
                                         </td>
                                     </tr>
+                                    @php $totalPrice += $item['price'] @endphp
                                 @endforeach
                                 {{-- <tr>
                                     <td class="shoping__cart__item">
@@ -185,8 +186,8 @@
                     <div class="shoping__checkout">
                         <h5>Cart Total</h5>
                         <ul>
-                            <li>Subtotal <span>$454.98</span></li>
-                            <li>Total <span>$454.98</span></li>
+                            <li>Subtotal <span>{{ number_format($totalPrice, 2) }}</span></li>
+                            <li>Total <span>{{ number_format($totalPrice, 2) }}</span></li>
                         </ul>
                         <a href="#" class="primary-btn">PROCEED TO CHECKOUT</a>
                     </div>
@@ -195,4 +196,14 @@
         </div>
     </section>
     <!-- Shoping Cart Section End -->
+@endsection
+
+@section('js-custom')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.icon_close').on('click', function() {
+                alert('huhasduas');
+            })
+        })
+    </script>
 @endsection

@@ -54,8 +54,8 @@ Route::get('home', [HomeController::class, 'index'])->name('home');
 Route::get('product/{slug}', [ClientProductController::class, 'getProductBySlug'])->name('product.detail');
 
 // Cart
-Route::get('/product/add-to-cart/{productId}', [CartController::class, 'addProductToCart'])->name('product.add-to-cart');
-Route::get('cart', [CartController::class, 'index'])->name('client.pages.cart');
+require __DIR__ . '/cart/web.php';
+
 
 Route::get('about-us', function () {
     return view('about_us');

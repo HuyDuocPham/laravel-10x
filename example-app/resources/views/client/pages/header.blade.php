@@ -34,12 +34,13 @@
                             @endphp
                             <a href="#"><i class="fa fa-user"></i> {{ $name }}</a>
 
-                            @if(session()->has('user'))
-                                <a href="#" onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                            @if (session()->has('user'))
+                                <a href="#"
+                                    onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                                     Dang xuat
                                 </a>
-                                <form id="frm-logout" action="{{ route('nguoidung.dangxuat') }}"
-                                method="POST" style="display: none;">
+                                <form id="frm-logout" action="{{ route('nguoidung.dangxuat') }}" method="POST"
+                                    style="display: none;">
                                     @csrf
                                 </form>
                             @endif
@@ -78,9 +79,14 @@
                 <div class="header__cart">
                     <ul>
                         <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                        <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                        @php
+                            $total = session()->has('cart') ? count(sesstion()->get('cart')) : 0;
+                        @endphp
+                        <li><a href="#"><i class="fa fa-shopping-bag"></i> <span
+                                    id="total_product">{{ $total }}</span></a>
+                        </li>
                     </ul>
-                    <div class="header__cart__price">item: <span>$150.00</span></div>
+                    <div class="header__cart__price">item: <span>513412323213</span></div>
                 </div>
             </div>
         </div>
