@@ -10,14 +10,12 @@ class Product extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'product'; // Chỉ định class Product  tương tác với table tên 'product'
-    protected $primaryKey = 'id'; //default
+    protected $table = 'product';
 
     public $fillable = [
-        'id',
         'name',
-        'slug',
         'price',
+        'slug',
         'discount_price',
         'description',
         'short_description',
@@ -25,13 +23,12 @@ class Product extends Model
         'qty',
         'shipping',
         'weight',
-        'status',
         'image_url',
-        'product_category_id',
+        'status',
+        'product_category_id'
     ];
 
-    public function category()
-    {
+    public function category(){
         return $this->belongsTo(ProductCategory::class, 'product_category_id')->withTrashed();
     }
 }

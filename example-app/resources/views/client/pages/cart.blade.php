@@ -85,79 +85,41 @@
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Total</th>
+                                    <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="table-product">
                                 @php $totalPrice = 0; @endphp
                                 @foreach ($cart as $productId => $item)
-                                    <tr>
+                                    <tr id="product{{ $productId }}">
                                         <td class="shoping__cart__item">
-                                            <img src="img/cart/cart-1.jpg" alt="">
+                                            <img width="150" src="{{ $item['image_url'] }}" alt="">
                                             <h5>{{ $item['name'] }}</h5>
                                         </td>
                                         <td class="shoping__cart__price">
-                                            $ {{ $item['price'] }}
+                                            ${{ number_format($item['price'], 2) }}
                                         </td>
                                         <td class="shoping__cart__quantity">
                                             <div class="quantity">
                                                 <div class="pro-qty">
-                                                    <input type="text" value="{{ $item['qty'] }}">
+                                                    <input
+                                                        data-url="{{ route('cart.update-product-in-cart', ['productId' => $productId]) }}"
+                                                        data-id="{{ $productId }}" type="text"
+                                                        value="{{ $item['qty'] }}">
                                                 </div>
                                             </div>
                                         </td>
                                         <td class="shoping__cart__total">
-                                            $ {{ number_format($item['price'] * $item['qty'], 2) }}
+                                            ${{ number_format($item['price'] * $item['qty'], 2) }}
                                         </td>
                                         <td class="shoping__cart__item__close">
-                                            <span data-id="{{ $productId }}" class="icon_close"></span>
+                                            <span
+                                                data-url="{{ route('cart.delete-product-in-cart', ['productId' => $productId]) }}"
+                                                data-id="{{ $productId }}" class="icon_close"></span>
                                         </td>
                                     </tr>
-                                    @php $totalPrice += $item['price'] @endphp
+                                    @php $totalPrice += $item['qty'] * $item['price']  @endphp
                                 @endforeach
-                                {{-- <tr>
-                                    <td class="shoping__cart__item">
-                                        <img src="img/cart/cart-2.jpg" alt="">
-                                        <h5>Fresh Garden Vegetable</h5>
-                                    </td>
-                                    <td class="shoping__cart__price">
-                                        $39.00
-                                    </td>
-                                    <td class="shoping__cart__quantity">
-                                        <div class="quantity">
-                                            <div class="pro-qty">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="shoping__cart__total">
-                                        $39.99
-                                    </td>
-                                    <td class="shoping__cart__item__close">
-                                        <span class="icon_close"></span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="shoping__cart__item">
-                                        <img src="img/cart/cart-3.jpg" alt="">
-                                        <h5>Organic Bananas</h5>
-                                    </td>
-                                    <td class="shoping__cart__price">
-                                        $69.00
-                                    </td>
-                                    <td class="shoping__cart__quantity">
-                                        <div class="quantity">
-                                            <div class="pro-qty">
-                                                <input type="text" value="1">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <td class="shoping__cart__total">
-                                        $69.99
-                                    </td>
-                                    <td class="shoping__cart__item__close">
-                                        <span class="icon_close"></span>
-                                    </td>
-                                </tr> --}}
                             </tbody>
                         </table>
                     </div>
@@ -167,7 +129,9 @@
                 <div class="col-lg-12">
                     <div class="shoping__cart__btns">
                         <a href="#" class="primary-btn cart-btn">CONTINUE SHOPPING</a>
-                        <a href="#" class="primary-btn cart-btn cart-btn-right"><span class="icon_loading"></span>
+                        <a href="#" data-url="{{ route('cart.delete-cart') }}"
+                            class="primary-btn cart-btn cart-btn-right cart-btn-delete-all-item"><span
+                                class="icon_loading"></span>
                             Upadate Cart</a>
                     </div>
                 </div>
@@ -186,8 +150,8 @@
                     <div class="shoping__checkout">
                         <h5>Cart Total</h5>
                         <ul>
-                            <li>Subtotal <span>{{ number_format($totalPrice, 2) }}</span></li>
-                            <li>Total <span>{{ number_format($totalPrice, 2) }}</span></li>
+                            <li>Subtotal <span>${{ number_format($totalPrice, 2) }}</span></li>
+                            <li>Total <span>${{ number_format($totalPrice, 2) }}</span></li>
                         </ul>
                         <a href="#" class="primary-btn">PROCEED TO CHECKOUT</a>
                     </div>
@@ -202,7 +166,79 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('.icon_close').on('click', function() {
-                alert('huhasduas');
+                var productId = $(this).data('id');
+                var url = $(this).data('url');
+                $.ajax({
+                    method: 'GET',
+                    url: url, // action of form
+                    success: function(res) {
+
+                        swal.fire({
+                            icon: "Success",
+                            text: res.message,
+                        });
+
+                        var total_price = res.total_price;
+                        var total_product = res.total_product;
+                        $('#total_product').html(total_product);
+                        $('#total_price').html('$' + total_price);
+                        $('#product' + $productId).empty();
+                    },
+                });
+            })
+
+            $('span.qtybtn').on('click', function() {
+                var button = $(this);
+                var oldValue = button.siblings('input').val(); // siblings: thẻ cùng cấp
+                if (button.hasClass('inc')) {
+                    oldValue = parseFloat(oldValue) + 1;
+                } else {
+                    oldValue = parseFloat(oldValue) - 1;
+                    oldValue = oldValue >= 0 ? oldValue : 0;
+                }
+
+                var url = button.siblings('input').date('url') + "/" + oldValue;
+                $.ajax({
+                    method: 'GET',
+                    url: url, // action of form
+                    success: function(res) {
+                        swal.fire({
+                            icon: "Success",
+                            text: res.message,
+                        });
+                        var total_price = res.total_price;
+                        var total_product = res.total_product;
+                        $('#total_product').html(total_product);
+                        $('#total_price').html('$' + total_price);
+
+                        var urlCart = "{{ route('cart.index') }}";
+                        var id = button.siblings('input').data('id');
+
+                        var selector = "#product" + id + " .shoping__cart__total span";
+                        var urlUpdate = urlCart + " " + selector;
+
+                        var selectorSubTotal = '.shoping__checkout .subtotal';
+                        var selectorTotal = '.shoping__checkout .total';
+
+                    },
+                });
+            })
+
+            $('cart-btn-delete-all-item').on('click', function() {
+                var url = $(this).data('url');
+                $.ajax({
+                    method: 'GET',
+                    url: url, // action of form
+                    success: function(res) {
+                        swal.fire({
+                            icon: "Success",
+                            text: res.message,
+                        });
+
+                        $('#table-product').empty();
+                    }
+
+                })
             })
         })
     </script>

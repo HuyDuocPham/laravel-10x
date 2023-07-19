@@ -35,95 +35,80 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+require __DIR__.'/auth.php';
 
-// Route::get('home', function (){
-//     return '<h1>Home</h1>';
-// });
-
-// Route::get('admin', function (){
-//     return '<h1>Admin</h1>';
-// })->name('admin');
-require __DIR__ . '/auth.php';
-
-
-// Route client
-// Route::get('home', function () {
-//     return view('client.pages.home');
-// })->name('home');
 Route::get('home', [HomeController::class, 'index'])->name('home');
-Route::get('product/{slug}', [ClientProductController::class, 'getProductBySlug'])->name('product.detail');
 
-// Cart
-require __DIR__ . '/cart/web.php';
-
-
-Route::get('about-us', function () {
+Route::get('about-us',function (){
     return view('about_us');
 });
-Route::get('contact', function () {
+Route::get('contact',function (){
     return view('client.pages.contact');
 });
 
-Route::get('blog', function () {
+Route::get('blog', function(){
     return view('client.pages.blog');
 });
-
-Route::get('product-list', function () {
+Route::get('product-list', function(){
     return view('client.pages.product_list');
 });
+Route::get('product/{slug}', [ClientProductController::class, 'getProductBySlug'])->name('product.detail');
 
-Route::get('checkout', function () {
+Route::get('cart', [CartController::class, 'index'])->name('cart.index');
+
+Route::get('checkout', function(){
     return view('client.pages.checkout');
 });
 
-// Route Admin
+
 Route::middleware('auth.admin')->name('admin.')->group(function () {
-    Route::get('admin', function () {
+    Route::get('admin',function (){
         return view('admin.pages.dashboard');
     })->name('admin');
 
-    Route::get('admin/user', function () {
+    Route::get('admin/user',function (){
         return view('admin.pages.user');
     })->name('user');
 
-    Route::get('admin/blog', function () {
+    Route::get('admin/blog',function (){
         return view('admin.pages.blog');
     })->name('blog');
 
-
-    //Product
-    // Route::get('admin/product', function () {
+    // Route::get('admin/product',function (){
     //     return view('admin.pages.product');
     // })->name('product');
 
-    Route::resource('admin/product', ProductController::class); // Tự tạo ra tất cả các route của ProductController
+    // Route::get('admin/product/create',[ProductController::class, 'create'])->name('product.create');
+    // Route::post('admin/product/store',[ProductController::class, 'store'])->name('product.store');
+    // Route::get('admin/product/show/{id}',[ProductController::class, 'show'])->name('product.store');
+    // Route::get('admin/product/update',[ProductController::class, 'update'])->name('product.store');
+    // Route::post('admin/product/delete',[ProductController::class, 'destroy'])->name('product.store');
+
+    Route::resource('admin/product', ProductController::class);
+
     Route::post('admin/product/restore/{product}', [ProductController::class, 'restore'])->name('product.restore');
 
-
-
-    //Product_Category
     Route::get('admin/product_category', [ProductCategoryController::class, 'index'])->name('product_category.list');
 
-    Route::get('admin/product_category/create', function () {
+    Route::get('admin/product_category/create', function (){
         return view('admin.product_category.create');
     })->name('product_category.create');
 
     Route::post('admin/product_category/save', [ProductCategoryController::class, 'store'])
-        ->name('product_category.save');
+    ->name('product_category.save');
 
     Route::post('admin/product_category/slug', [ProductCategoryController::class, 'getSlug'])
-        ->name('product_category.slug');
+    ->name('product_category.slug');
 
     Route::get('admin/product_category/{id}', [ProductCategoryController::class, 'detail'])->name('product_category.detail');
 
     Route::post('admin/product_category/update/{id}', [ProductCategoryController::class, 'update'])
-        ->name('product_category.update');
+    ->name('product_category.update');
 
     Route::post('admin/product_category/delete/{id}', [ProductCategoryController::class, 'destroy'])
-        ->name('product_category.delete');
+    ->name('product_category.delete');
+
 });
 
-
-Route::get('test', function () {
-    return view('test');
-});
+//Cart
+require __DIR__.'/cart/web.php';

@@ -9,15 +9,14 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
-    {
-        // $products = Product::orderBy('id', 'desc')->take(8)->get();
+    public function index(){
+        //Get 8 latest Product
         $products = Product::latest()->take(8)->get();
+        //Get 10 product category latest + child > 0
+        // $productCategories = ProductCategory::latest()->get()->filter(function($productCategory){
+        //     return $productCategory->products->count() > 0;
+        // })->take(10);
 
-        $productCategories = ProductCategory::latest()->get()->filter(function ($productCategory) {
-            return $productCategory->products->count() > 0;
-        })->take(10);
-
-        return view('client.pages.home', compact('products', 'productCategories'));
+        return view('client.pages.home', compact('products'));
     }
 }

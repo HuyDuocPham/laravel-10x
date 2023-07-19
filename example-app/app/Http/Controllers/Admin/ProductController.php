@@ -3,16 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
-use App\Http\Requests\StoreProductRequest;
+use Illuminate\Pipeline\Pipeline as PipelinePipeline;
 use Illuminate\Support\Facades\DB;
-use Closure;
-use App\Models\User;
 use Illuminate\Support\Facades\Pipeline;
-
-
 
 class ProductController extends Controller
 {
@@ -21,91 +19,94 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        // $products = Product::query();
         // $keyword = $request->keyword;
         // $status = $request->status;
-        // $amountStart = $request->amount_start;
-        // $amountEnd = $request->amount_end;
-        // $sort =  $request->sort;
+        // $amountStart= $request->amount_start;
+        // $amountEnd= $request->amount_end;
+        // $sort = $request->sort;
 
         // $filter = [];
-        // //Search by keyword
-        // if (!is_null($keyword)) {
-        //     $filter[] = ['name', 'like', '%' . $keyword . '%'];
+        // if(!is_null($keyword)){
+        //     $filter[] = ['name', 'like', '%'.$keyword.'%'];
         // }
-        // //Search by status
-        // if (!is_null($status)) {
+        // //200
+        // if(!is_null($status)){
         //     $filter[] = ['status', $status];
         // }
-        // //Search by price
-        // if (!is_null($amountStart) && !is_null($amountEnd)) {
+        // //100
+        // if(!is_null($amountStart) && !is_null($amountEnd))
+        // {
         //     $filter[] = ['price', '>=', $amountStart];
         //     $filter[] = ['price', '<=', $amountEnd];
         // }
+        // //50
 
         // //Sort
         // $sortBy = ['id', 'desc'];
-        // switch ($sort) {
-        //         // case 0:
-        //         //     $sortBy = ['id', 'desc'];
-        //         //     break;
+        // switch($sort){
         //     case 1:
         //         $sortBy = ['price', 'asc'];
         //         break;
         //     case 2:
         //         $sortBy = ['price', 'desc'];
         //         break;
-        //     default:
         // }
 
-        // Pipe Parten Design    
-        // $user = Pipeline::send($user)
-        //     ->through([
-        //         function (User $user, Closure $next) {
-        //             // ...
+        // $products = Product::where($filter)->orderBy($sortBy[0], $sortBy[1])->paginate(config('myconfig.item_per_page'));
 
-        //             return $next($user);
-        //         },
-        //         function (User $user, Closure $next) {
-        //             // ...
+        // if(!is_null($amountStart) && !is_null($amountEnd))
+        // {
+        //     $products = Product::where($filter)
+        //     ->whereBetween('price', [$amountStart, $amountEnd])
+        //     ->paginate(config('myconfig.item_per_page'));
+        // }else{
+        //     $products = Product::where($filter)->paginate(config('myconfig.item_per_page'));
+        // }
 
-        //             return $next($user);
-        //         },
-        //     ])
-        //     ->then(fn (User $user) => $user);
+
+        //QueryBuilder
+        //SELECT product.*, product_category.name
+        // FROM product INNER JOIN product_category
+        //  ON product_category.id = product.product_category_id;
+
+        // $products = DB::table('product')
+        // ->join('product_category', 'product_category.id', '=','product.product_category_id')
+        // ->select('product.*', 'product_category.name as product_category_name')
+        // ->paginate(config('myconfig.item_per_page'));
+
 
         $pipelines = [
             \App\Filters\ByKeyword::class,
-            \App\Filters\ByMinMax::class,
             \App\Filters\ByStatus::class,
+            \App\Filters\ByMinMax::class,
         ];
+
+        // //use Illuminate\Support\Facades\Pipeline;
+
         $pipeline = Pipeline::send(Product::query()->withTrashed())
-            ->through($pipelines)
-            ->thenReturn();
-        $products = $pipeline->paginate(5);
+        ->through($pipelines)
+        ->thenReturn();
 
-        // $products = Product::where($filter)->paginate(5);
-        // // $products = Product::where($filter)->orderBy($sortBy[0], $sortBy[1])->paginate(5);
+        //use Illuminate\Pipeline\Pipeline
+        // $pipeline = app(PipelinePipeline::class)
+        // ->through($pipelines)
+        // ->thenReturn();
 
-        // if (is_null($keyword)) {
-        //     $products = Product::paginate(5);
-        // } else {
-        //     $products = Product::where('name', 'like', '%' . $keyword . '%')->paginate(5);
-        // }
+        $products = $pipeline->paginate(config('myconfig.item_per_page'));
+        // $products = $pipeline->get();
+        // $products = Product::with('category')->paginate(999);
 
-        //Eloquent
-        // $products = Product::all(); //Nếu dùng hàm link phải đổi all()->paginate
-        // $products = Product::paginate(5); //paginate(config(myconfig.item_per_page))
-
-        //Query Builder
         // $products = DB::table('product')
-        //     ->join('product_category', 'product_category.id', '=', 'product.product_category_id')
-        //     ->select('product.*', 'product_category.name as product_category_name')
-        //     ->paginate(5); //paginate(config(myconfig.item_per_page))
+        // ->join('product_category', 'product.product_category_id', '=', 'product_category.id')
+        // ->select('product.*', 'product_category.name as product_category_name')
+        // ->paginate(999);
+
 
         $maxPrice = Product::max('price');
         $minPrice = Product::min('price');
-        return view('admin.product.list', [
+
+        return view('admin.product.list',
+        [
             'products' => $products,
             'maxPrice' => $maxPrice,
             'minPrice' => $minPrice
@@ -117,11 +118,16 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //SQP RAW
-        // $productCategories = DB::select("SELECT * from product_category where status = 1");
+        //SQL Raw
+        // $productCategories = DB::select('select * from product_category where status = 1');
 
         //Query Builder
+        // $productCategories = DB::table('product_category')->where('status', 1)->get();
+
+        //Eloquent
+        // $productCategories = ProductCategory::all();
         $productCategories = ProductCategory::where('status', 1)->get();
+
         return view('admin.product.create')->with('productCategories', $productCategories);
     }
 
@@ -130,12 +136,16 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-
         //validate
         // $request->validate([
         //     'name' => 'required',
         //     'product_category_id' => 'required'
-        // ]); // move Http/Request/StoreProductRequest
+        // ]);
+
+        //SQL Raw
+        // $check = DB::insert("INSERT INTO product ('name') VALUES (?) ", [$request->name]);
+        //Query Builder
+        // $check = DB::table('product')->insert(['name' => $request->name]);
 
         $fileName = null;
         if ($request->hasFile('image_url')) {
@@ -146,10 +156,6 @@ class ProductController extends Controller
             $request->file('image_url')->move(public_path('images'), $fileName);
         }
 
-        //SQL RAW
-        // $check = DB::insert("INSERT INTO product('name') VALUES (?)", [ $request->name]);
-
-        // Eloquent
         $product = Product::create([
             'name' => $request->name,
             'slug' => $request->slug,
@@ -163,10 +169,10 @@ class ProductController extends Controller
             'weight' => $request->weight,
             'status' => $request->status,
             'product_category_id' => $request->product_category_id,
-            'image_url' => $fileName,
+            'image_url' => $fileName
         ]);
 
-        $message = $product ? 'Create product success' : 'Create failed';
+        $message = $product ? 'create success' : 'create failed';
 
         return redirect()->route('admin.product.index')->with('message', $message);
     }
@@ -174,20 +180,17 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-
-        // //SQL RAW
-        // $product = DB::select('SELECT * FROM product WHERE id = ?', [$id]);
-
-        // //Query Builder
-        // $product = DB::table('product')->where('id',$id)->first();
-
+        //SQL Raw
+        // $product = DB::select('select * from product where id = ?', [$id]);
+        //Query Builder
+        // $product = DB::table('product')->where('id', $id)->first();
         //Eloquent
-        $product = Product::find($id);
+        // $product = Product::find($id);
         $productCategories = ProductCategory::where('status', 1)->get();
 
-        return view('admin.product.edit', ['product' => $product, 'productCategories' => $productCategories]);
+	    return view('admin.product.edit', ['product' => $product, 'productCategories' => $productCategories]);
     }
 
     /**
@@ -201,13 +204,16 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        $request->validate([
-            'name' => 'required',
-            'product_category_id' => 'required'
-        ]);
-        $product = Product::find($id);
+         //validate
+        //  $request->validate([
+        //     'name' => 'required',
+        //     'product_category_id' => 'required'
+        // ]);
+
+        //Tim record se~ update
+        // $product = Product::find($id);
 
         $fileName = $product->image_url;
         if ($request->hasFile('image_url')) {
@@ -217,7 +223,7 @@ class ProductController extends Controller
             $fileName = $fileName . '_' . time() . '.' . $extension;
             $request->file('image_url')->move(public_path('images'), $fileName);
 
-            //remove old image
+            //Remove old images
             if (!is_null($product->image_url) && file_exists("images/" . $product->image_url)) {
                 unlink("images/" . $product->image_url);
             }
@@ -236,39 +242,34 @@ class ProductController extends Controller
             'weight' => $request->weight,
             'status' => $request->status,
             'product_category_id' => $request->product_category_id,
-            'image_url' => $fileName,
+            'image_url' => $fileName
         ]);
 
-        $message = $check ? 'Update success' : 'Update failed';
+        $message = $check ? 'update success' : 'update failed';
+
         return redirect()->route('admin.product.index')->with('message', $message);
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    // public function destroy(string $id)
-    // {
-    //     $product = Product::find($id);
-    //     $check = $product->delete();
-    //     $message = $check ? 'Delete success' : 'Delete failed';
-    //     return redirect()->route('admin.product.index')->with('message', $message);
-    // }
     public function destroy(Product $product)
     {
         // $product = Product::find($id);
         $check = $product->delete();
-        $message = $check ? 'Delete success' : 'Delete failed';
+
+        $message = $check ? 'delete success' : 'delete failed';
+
         return redirect()->route('admin.product.index')->with('message', $message);
     }
 
-    public function restore(string $product)
-    {
+    public function restore(string $product){
         $product = Product::withTrashed()->find($product);
-        //Cach 1:
         // $product->deleted_at = null;
         // $product->save();
-        
         $product->restore();
+
         return redirect()->route('admin.product.index')->with('message', 'Restore success');
     }
 }

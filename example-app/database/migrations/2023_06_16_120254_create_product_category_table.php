@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('slug',255)->nullable();
             $table->string('name', 255)->nullable();
             $table->boolean('status')->default(1);
-            $table->softDeletes();// deleted_at
             $table->timestamps();
+            $table->softDeletes(); //deleted_at
         });
     }
 

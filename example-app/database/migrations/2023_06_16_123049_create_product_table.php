@@ -28,12 +28,12 @@ return new class extends Migration
 
             //Buoc 1 - tao field
             // $table->bigInteger('product_category_id')->unsigned();
-            $table->unsignedBigInteger('product_category_id');
+            $table->unsignedBigInteger('product_category_id')->nullable();
             //Buoc 2 - chi dinh field do la khoa ngoai
             $table->foreign('product_category_id')->references('id')->on('product_category')->onDelete('cascade');
 
-            $table->timestamps();
-            $table->softDeletes();
+            $table->timestamps(); //created_at updated_at
+            $table->softDeletes(); //deleted_at
         });
     }
 
@@ -45,3 +45,4 @@ return new class extends Migration
         Schema::dropIfExists('product');
     }
 };
+

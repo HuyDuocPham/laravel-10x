@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductCategoryRequest;
+use App\Http\Requests\UpdateProductCategoryRequest;
 use App\Models\ProductCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -10,16 +12,15 @@ use Illuminate\Support\Str;
 
 class ProductCategoryController extends Controller
 {
-    public function store(Request $request)
-    {
+    public function store(StoreProductCategoryRequest $request){
         //Validate data from client
-        $request->validate([
-            'name' => 'required|min:1|max:255|string|unique:product_category,name',
-            'slug' => 'required|min:1|max:255|string',
-            'status' => 'required|boolean'
-        ], [
-            'name.required' => 'Ten buoc phai nhap !'
-        ]);
+        // $request->validate([
+        //     'name' => 'required|min:1|max:255|string|unique:product_category,name',
+        //     'slug' => 'required|min:1|max:255|string',
+        //     'status' => 'required|boolean'
+        // ],[
+        //     'name.required' => 'Ten buoc phai nhap !'
+        // ]);
 
         //SQL RAW
         // $check = DB::insert('insert into product_category(name,slug,status) values (?, ?, ?)',
@@ -44,14 +45,12 @@ class ProductCategoryController extends Controller
         return redirect()->route('admin.product_category.list')->with('message', $msg);
     }
 
-    public function getSlug(Request $request)
-    {
+    public function getSlug(Request $request){
         $slug = Str::slug($request->name);
         return response()->json(['slug' => $slug]);
     }
 
-    public function index(Request $request)
-    {
+    public function index(Request $request){
         // $page = $request->page ?? 1;
 
         // $itemPerPage = config('myconfig.item_per_page');
@@ -70,28 +69,26 @@ class ProductCategoryController extends Controller
         // $productCategories = DB::table('product_category')
         // ->paginate(config('myconfig.item_per_page'));
 
-        //Phải dùng Query builder để chạy {{ProductCategories ->prpducts->count()}}
         $productCategories = ProductCategory::paginate(config('myconfig.item_per_page'));
-        return view('admin.product_category.list', compact('productCategories'));
+
+        return view('admin.product_category.list',compact('productCategories'));
     }
 
-    public function detail($id)
-    {
+    public function detail($id){
         $productCategory = DB::select('select * from product_category where id = ?', [$id]);
 
         return view('admin.product_category.detail', ['productCategory' => $productCategory]);
     }
 
-    public function update(Request $request, string $id)
-    {
+    public function update(UpdateProductCategoryRequest $request, string $id){
         //validate input from user
-        $request->validate([
-            'name' => 'required|min:1|max:255|string|unique:product_category,name,' . $id,
-            'slug' => 'required|min:1|max:255|string',
-            'status' => 'required|boolean'
-        ], [
-            'name.required' => 'Ten buoc phai nhap !'
-        ]);
+        // $request->validate([
+        //     'name' => 'required|min:1|max:255|string|unique:product_category,name,'.$id,
+        //     'slug' => 'required|min:1|max:255|string',
+        //     'status' => 'required|boolean'
+        // ],[
+        //     'name.required' => 'Ten buoc phai nhap !'
+        // ]);
 
         //Update into DB - SQL Raw
         // $check = DB::update('UPDATE product_category SET name = ?, slug = ?, status = ? where id = ?',
@@ -103,27 +100,26 @@ class ProductCategoryController extends Controller
         // ]);
         //Query Builder
         $check = DB::table('product_category')
-            ->where('id', $id)
-            ->update([
-                'name' => $request->name,
-                'slug' => $request->slug,
-                'status' => $request->status,
-            ]);
+        ->where('id', $id)
+        ->update([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'status' => $request->status,
+        ]);
 
         $message = $check ? 'update success' : 'update failed';
 
         return redirect()->route('admin.product_category.list')->with('message', $message);
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id){
         //SQL RAW
         // $check = DB::delete('delete from product_category where id = ?', [$id]);
 
-        //Query Builder : không dùng được sort Delete
+        //Query Builder
         // $check = DB::table('product_category')->where('id', $id)->delete();
 
-        //Eloquent mới dùng được sort delete
+        //Eloquent
         $productCategory = ProductCategory::find($id);
         $check = $productCategory->delete();
 

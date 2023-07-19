@@ -22,20 +22,19 @@ class ComposerServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // View::composer('*', function ($view) {
-        //     return $view->with('phamhuyduoc', 'Pham Huy Duoc');
+        //     $view->with('nguyenvanb', 'Nguyen Van C');
         // });
-
         $arrayViewProductCategory = [
             'client.pages.home',
-            'client.pages.product_detail',
+            'client.pages.product_detail'
         ];
+
         View::composer($arrayViewProductCategory, function ($view) {
-            $productCategories = ProductCategory::latest()->get()->filter(function ($productCategory) {
+            $productCategories = ProductCategory::latest()->get()->filter(function($productCategory){
                 return $productCategory->products->count() > 0;
             })->take(10);
-            return $view->with('productCategories', $productCategories);
+
+            $view->with('productCategories',  $productCategories);
         });
-
-
     }
 }

@@ -80,13 +80,21 @@
                     <ul>
                         <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
                         @php
-                            $total = session()->has('cart') ? count(sesstion()->get('cart')) : 0;
+                            $total = session()->has('cart') ? count(session()->get('cart')) : 0;
                         @endphp
-                        <li><a href="#"><i class="fa fa-shopping-bag"></i> <span
-                                    id="total_product">{{ $total }}</span></a>
-                        </li>
+                        <li><a href="{{ route('cart.index') }}"><i class="fa fa-shopping-bag"></i> <span
+                                    id="total_product">{{ $total }}</span></a></li>
                     </ul>
-                    <div class="header__cart__price">item: <span>513412323213</span></div>
+                    @php
+                        $totalPrice = 0;
+                        if (session()->has('cart')) {
+                            foreach (session()->get('cart') as $item) {
+                                $totalPrice += $item['qty'] * $item['price'];
+                            }
+                        }
+                    @endphp
+                    <div class="header__cart__price">item: <span
+                            id="total_price">${{ number_format($totalPrice, 2) }}</span></div>
                 </div>
             </div>
         </div>
