@@ -284,7 +284,12 @@
                         });
                         $('#total_product').html(total_product);
                         $('#total_price').html('$' + total_price);
-                    }
+                    },
+                    statusCode: {
+                        404: function() {
+                            window.location.href = "{{ route('login') }}";
+                        }
+                    },
                 });
             });
         });

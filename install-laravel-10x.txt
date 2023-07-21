@@ -430,6 +430,102 @@ Business logic : ?
 Buoi 16: Cart
 
 
+Buoi 17: CheckOut
+
+php artisan make:migration CreateOrderTable
+-- Order --
+id (PK)
+user_id => FK (user)
+address
+note
+payment_method (cod | vnpay)
+subtotal  // easy search/sort
+total // easy search/sort
+status
+created_at
+updated_at
+deleted_at
+
+
+php artisan make:migration CreateOrderTable
+-- Order Item --
+id (PK)
+oder_id => FK (Order)
+product_id => (Product)
+product_name
+product_price
+product_qty
+created_at
+updated_at
+deleted_at
+
+php artisan make:migration AddPhoneToUsers
+-- User --
+phone
+
+php artisan make:migration CreateOrderPaymentMethodsTable
+-- Payment Method --
+id (PK)
+oder_id => FK (Order)
+payment_provider
+total_balance
+status
+created_at
+updated_at
+deleted_at
+
+1, form?? method?? action??
+2, @csrf ??
+3, input name??
+4, type submit??
+
+
+Laravel Transaction
+DB::beginTransaction();
+try{
+record 1
+record 2
+record 3
+}catch(\Exception $message)
+ 	{DB::rollback();}
+
+Mật Khẩu Tạo Ứng Dụng
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=huyduocphamm@gmail.com
+MAIL_PASSWORD=irogvgqybhynirxx
+MAIL_ENCRYPTION=1ls
+MAIL_FROM_ADDRESS="huyduocphamm@gmail.com"
+MAIL_FROM_NAME="${APP_NAME}"
+
+
+
+
+DO AN
+1, ERD
+2, Slide
+3. Source code
+3. Source code + slide + ERD -> compress -> classroom(link)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

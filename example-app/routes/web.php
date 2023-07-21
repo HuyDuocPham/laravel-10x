@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -34,43 +35,40 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+require __DIR__ . '/auth.php';
 
-require __DIR__.'/auth.php';
 
 Route::get('home', [HomeController::class, 'index'])->name('home');
 
-Route::get('about-us',function (){
+Route::get('about-us', function () {
     return view('about_us');
 });
-Route::get('contact',function (){
+Route::get('contact', function () {
     return view('client.pages.contact');
 });
 
-Route::get('blog', function(){
+Route::get('blog', function () {
     return view('client.pages.blog');
 });
-Route::get('product-list', function(){
+Route::get('product-list', function () {
     return view('client.pages.product_list');
 });
 Route::get('product/{slug}', [ClientProductController::class, 'getProductBySlug'])->name('product.detail');
 
-Route::get('cart', [CartController::class, 'index'])->name('cart.index');
-
-Route::get('checkout', function(){
-    return view('client.pages.checkout');
-});
+// CheckOut
+Route::get('checkout', [OrderController::class, 'index'])->name('checkout');
 
 
 Route::middleware('auth.admin')->name('admin.')->group(function () {
-    Route::get('admin',function (){
+    Route::get('admin', function () {
         return view('admin.pages.dashboard');
     })->name('admin');
 
-    Route::get('admin/user',function (){
+    Route::get('admin/user', function () {
         return view('admin.pages.user');
     })->name('user');
 
-    Route::get('admin/blog',function (){
+    Route::get('admin/blog', function () {
         return view('admin.pages.blog');
     })->name('blog');
 
@@ -90,25 +88,24 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
 
     Route::get('admin/product_category', [ProductCategoryController::class, 'index'])->name('product_category.list');
 
-    Route::get('admin/product_category/create', function (){
+    Route::get('admin/product_category/create', function () {
         return view('admin.product_category.create');
     })->name('product_category.create');
 
     Route::post('admin/product_category/save', [ProductCategoryController::class, 'store'])
-    ->name('product_category.save');
+        ->name('product_category.save');
 
     Route::post('admin/product_category/slug', [ProductCategoryController::class, 'getSlug'])
-    ->name('product_category.slug');
+        ->name('product_category.slug');
 
     Route::get('admin/product_category/{id}', [ProductCategoryController::class, 'detail'])->name('product_category.detail');
 
     Route::post('admin/product_category/update/{id}', [ProductCategoryController::class, 'update'])
-    ->name('product_category.update');
+        ->name('product_category.update');
 
     Route::post('admin/product_category/delete/{id}', [ProductCategoryController::class, 'destroy'])
-    ->name('product_category.delete');
-
+        ->name('product_category.delete');
 });
 
 //Cart
-require __DIR__.'/cart/web.php';
+require __DIR__ . '/cart/web.php';
