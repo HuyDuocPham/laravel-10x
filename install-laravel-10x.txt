@@ -525,7 +525,12 @@ php artisan make:mail OrderMail
 	TWILIO_AUTH_TOKEN =f5e39b32392836f15264e604fc6a5d49
 	TWILIO_PHONE_NUMBER =+12294664901
 	
-### url shortener
+- url shortener
+- Design Pattern
+- Event Listener
+
+php artisan make:event OrderSuccessEvent
+php artisan make:listener SendEmailToCustomerWhenOrderSuccess
 
 
 
