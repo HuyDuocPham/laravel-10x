@@ -495,9 +495,54 @@ MAIL_HOST=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USERNAME=huyduocphamm@gmail.com
 MAIL_PASSWORD=irogvgqybhynirxx
-MAIL_ENCRYPTION=1ls
+MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS="huyduocphamm@gmail.com"
 MAIL_FROM_NAME="${APP_NAME}"
+
+
+Buoi 18: Mail, DI (Dependency Injection) <= Design Patern
+
+php artisan make:mail OrderMail
+
+
+// Send mail to customer to confirm that order
+            Mail::to('huyduocphamm@gmail.com')->send(new OrderMail($order));
+
+// Send mail to admin to prepare order
+            Mail::to('huyduocphamm@gmail.com')->send(new OrderAdminEmail($order));
+
+
+
+
+// test: Route::get('test-send-mail', function () {
+    Mail::to('huyduocphamm@gmail.com')->send(new OrderMail());
+});
+
+### Twilio: 
+	composer require twilio/sdk
+	
+	TWILIO_ACCOUNT_SID =ACfe88b649f8fb58280d863b92e0246ca6
+	TWILIO_AUTH_TOKEN =f5e39b32392836f15264e604fc6a5d49
+	TWILIO_PHONE_NUMBER =+12294664901
+	
+### url shortener
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

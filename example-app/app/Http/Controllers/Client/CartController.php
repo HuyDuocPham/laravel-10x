@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Client;
 
+use App\Events\OrderSuccessEvent;
 use App\Http\Controllers\Controller;
+use App\Mail\OrderAdminEmail;
+use App\Mail\OrderMail;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -12,6 +15,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class CartController extends Controller
 {
@@ -75,7 +79,7 @@ class CartController extends Controller
         return response()->json(['message' => 'Remove product success!', 'total_product' => 0, 'total_price' => 0]);
     }
 
-    public  function placeOrder(Request $request)
+    public function placeOrder(Request $request)
     {
         //Validate from request
 
@@ -83,22 +87,25 @@ class CartController extends Controller
             DB::beginTransaction();
 
             // save database
-            $cart = session()->get('cart' . []);
+            $cart = session()->get('cart', []);
             $totalPrice = 0;
             foreach ($cart as $item) {
                 $totalPrice += $item['qty'] * $item['price'];
             }
             //--> Create record order
             $order = Order::create([
-                'user_id ' => Auth::user()->id,
-                'address ' => $request->address,
-                'city ' => $request->city,
-                'status ' => Order::STATUS_PENDING,
-                'note ' => $request->note,
-                'payment_method ' => $request->payment_method,
-                'subtotal ' => $totalPrice,
-                'total ' => $totalPrice,
+                'user_id' => Auth::user()->id,
+                'address' => $request->address,
+                'city' => $request->city,
+                'status' => Order::STATUS_PENDING,
+                'note' => $request->note,
+                'payment_method' => $request->payment_method,
+                'subtotal' => $totalPrice,
+                'total' => $totalPrice,
             ]);
+
+            //Create evetn order success
+
 
             // Create record order items
             foreach ($cart as $productId => $item) {
@@ -111,23 +118,49 @@ class CartController extends Controller
                 ]);
             }
 
+
             //Create record into table OrderPaymentMethod
             $orderPaymentMethod = OrderPaymentMethod::create([
                 'order_id' => $order->id,
-                'payment_provider' => $$request->get('payment_method'),
-                'total_balace' => $totalPrice,
+                'payment_provider' => $request->payment_method,
+                'total_balance' => $totalPrice,
                 'status' => OrderPaymentMethod::STATUS_PENDING,
             ]);
+
+
             $user = User::find(Auth::user()->id);
             $user->phone = $request->phone;
             $user->save();
 
+
             // Reset session cart
             session()->put('cart', []);
-        } catch (\Exception $message) {
-            DB::rollBack();
-        };
 
-        return redirect()->view('home')->with('msg', 'Order Success!');
+            event(new OrderSuccessEvent($order));
+
+
+            // Send mail to customer to confirm that order
+            // Mail::to('huyduocphamm@gmail.com')->send(new OrderMail($order));
+
+            // Send mail to admin to prepare order
+            // Mail::to('huyduocphamm@gmail.com')->send(new OrderAdminEmail($order));
+
+            // Sens sms to customer(https://console.twilio.com/?frameUrl=%2Fconsole%3Fx-target-region%3Dus1)
+            // $receiverNumber = '+84366321516';
+            // $client = new \Twilio\Rest\Client(env('TWILIO_ACCOUNT_SID'), env('TWILIO_AUTH_TOKEN'));
+            // $client->messages->create($receiverNumber, [
+            //     'from' => env('TWILIO_PHONE_NUMBER'),
+            //     'body' => 'PHD'
+            // ]);
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $exception->getMessage();
+        }
+
+
+
+        return redirect()->route('home')->with('msg', 'Order Success!');
     }
 }
