@@ -22,4 +22,7 @@ Route::prefix('cart')->name('cart.')->middleware('auth')->group(function () {
     Route::get('update-product-in-cart/{productId}/{qty?}', [CartController::class, 'updateProductInCart'])->name('update-product-in-cart');
     Route::get('delete-cart', [CartController::class, 'deleteCart'])->name('delete-cart');
     Route::post('place-order', [CartController::class, 'placeOrder'])->name('place-order');
+
+    //payment
+    Route::get('callback_nvpay', [CartController::class, 'callBackVnpay'])->name('callback-vnp');
 });

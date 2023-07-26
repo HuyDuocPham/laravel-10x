@@ -6,7 +6,7 @@ use App\Events\OrderSuccessEvent;
 use App\Mail\OrderAdminEmail;
 use Illuminate\Support\Facades\Mail;
 
-class SendEmailToCustomerWhenOrderSuccess
+class SendEmailToAdminWhenOrderSuccess
 {
     /**
      * Create the event listener.

@@ -535,6 +535,9 @@ php artisan make:listener SendEmailToCustomerWhenOrderSuccess
 
 
 
+Buoi 19: DI: dependency Injection, Payment Method
+#### VNPay: https://sandbox.vnpayment.vn/devreg
+download PHP : https://sandbox.vnpayment.vn/apis/downloads/
 
 
 

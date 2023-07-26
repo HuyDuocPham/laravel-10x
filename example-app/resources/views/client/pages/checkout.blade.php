@@ -92,8 +92,8 @@
                                 <div class="col-lg-12">
                                     <div class="checkout__input">
                                         <p>Name<span>*</span></p>
-                                        <input name="name" disabled
-                                            value="{{ Auth::check() ? Auth::user()->name : '' }}" type="text">
+                                        <input name="name" disabled value="{{ Auth::check() ? Auth::user()->name : '' }}"
+                                            type="text">
                                     </div>
                                 </div>
                             </div>
@@ -137,7 +137,8 @@
                                     @foreach ($cart as $productId => $item)
                                         @php $total += $item['price'] * $item['qty'] @endphp
                                         <li>{{ $item['name'] }}
-                                            <span>${{ number_format($item['price'] * $item['qty'], 2) }}</span></li>
+                                            <span>${{ number_format($item['price'] * $item['qty'], 2) }}</span>
+                                        </li>
                                     @endforeach
                                 </ul>
                                 <div class="checkout__order__subtotal">Subtotal <span>${{ number_format($total, 2) }}</span>
@@ -152,8 +153,15 @@
                                 </div>
                                 <div class="checkout__input__checkbox">
                                     <label for="paypal">
-                                        VNPay
-                                        <input type="radio" id="paypal" value="vnpay" name="payment_method">
+                                        VNPay with ATM
+                                        <input type="radio" id="paypal" value="vnpay_atm" name="payment_method">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="checkout__input__checkbox">
+                                    <label for="paypal">
+                                        VNPay with VISA, MASTER
+                                        <input type="radio" id="paypal" value="vnpay_credit" name="payment_method">
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>

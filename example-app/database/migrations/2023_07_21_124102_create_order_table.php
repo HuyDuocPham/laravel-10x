@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('payment_method', 255);
             $table->float('subtotal')->unsigned();
             $table->float('total')->unsigned();
-            $table->float('price')->unsigned();
+            $table->float('price')->unsigned()->nullable();
 
             $table->timestamps();
             $table->softDeletes();
