@@ -14,6 +14,7 @@ use Illuminate\Queue\SerializesModels;
 class OrderSuccessEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
+
     public $order;
     /**
      * Create a new event instance.

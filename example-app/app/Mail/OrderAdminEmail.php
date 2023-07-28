@@ -14,11 +14,10 @@ class OrderAdminEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
+    public $order;
     /**
      * Create a new message instance.
      */
-    public $order;
-
     public function __construct(Order $order)
     {
         $this->order = $order;
@@ -40,8 +39,8 @@ class OrderAdminEmail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.admin_email',
-            with: ['order' => $this->order],
+            view: 'mail.order_admin',
+            with: ['order' => $this->order]
         );
     }
 

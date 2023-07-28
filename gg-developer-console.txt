@@ -1,0 +1,13 @@
+https://console.cloud.google.com/apis/credentials/oauthclient/846396496307-t8h3pprjh265q1vejcgt3qcnsa5v41l9.apps.googleusercontent.com?project=greenacademy-huyduocphamm
+
+Client ID: 846396496307-t8h3pprjh265q1vejcgt3qcnsa5v41l9.apps.googleusercontent.com
+
+Client secret: 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
+
+
+
+
+
+
+
+

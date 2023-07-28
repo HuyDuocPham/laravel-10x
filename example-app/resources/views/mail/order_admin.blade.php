@@ -7,6 +7,10 @@
     <title>Order Email</title>
 </head>
 <body>
+    <div>Customer Name : {{ $order->user->name }}</div>
+    <div>Customer Email : {{ $order->user->email }}</div>
+    <div>Customer Phone : {{ $order->user->phone }}</div>
+    <div>Order Notes : {{ $order->note }}</div>
     <h1>Order Email</h1>
     <table>
         <tr>

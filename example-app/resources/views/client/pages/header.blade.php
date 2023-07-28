@@ -34,13 +34,12 @@
                             @endphp
                             <a href="#"><i class="fa fa-user"></i> {{ $name }}</a>
 
-                            @if (session()->has('user'))
-                                <a href="#"
-                                    onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
+                            @if(session()->has('user'))
+                                <a href="#" onclick="event.preventDefault(); document.getElementById('frm-logout').submit();">
                                     Dang xuat
                                 </a>
-                                <form id="frm-logout" action="{{ route('nguoidung.dangxuat') }}" method="POST"
-                                    style="display: none;">
+                                <form id="frm-logout" action="{{ route('nguoidung.dangxuat') }}"
+                                method="POST" style="display: none;">
                                     @csrf
                                 </form>
                             @endif
@@ -81,20 +80,18 @@
                         <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
                         @php
                             $total = session()->has('cart') ? count(session()->get('cart')) : 0;
-                        @endphp
-                        <li><a href="{{ route('cart.index') }}"><i class="fa fa-shopping-bag"></i> <span
-                                    id="total_product">{{ $total }}</span></a></li>
+                         @endphp
+                        <li><a href="#"><i class="fa fa-shopping-bag"></i> <span id="total_product">{{ $total }}</span></a></li>
                     </ul>
                     @php
                         $totalPrice = 0;
-                        if (session()->has('cart')) {
+                        if(session()->has('cart')){
                             foreach (session()->get('cart') as $item) {
                                 $totalPrice += $item['qty'] * $item['price'];
                             }
                         }
                     @endphp
-                    <div class="header__cart__price">item: <span
-                            id="total_price">${{ number_format($totalPrice, 2) }}</span></div>
+                    <div class="header__cart__price">item: <span id="total_price">${{ number_format($totalPrice,2) }}</span></div>
                 </div>
             </div>
         </div>

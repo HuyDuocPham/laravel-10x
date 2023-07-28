@@ -18,12 +18,10 @@ return new class extends Migration
             $table->string('address', 255);
             $table->string('city', 255);
             $table->string('status', 255);
-            $table->string('note', 255);
+            $table->string('note', 512);
             $table->string('payment_method', 255);
             $table->float('subtotal')->unsigned();
             $table->float('total')->unsigned();
-            $table->float('price')->unsigned()->nullable();
-
             $table->timestamps();
             $table->softDeletes();
         });

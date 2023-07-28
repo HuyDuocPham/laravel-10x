@@ -542,10 +542,15 @@ download PHP : https://sandbox.vnpayment.vn/apis/downloads/
 
 
 
+Buoi 20: Login Google, Laravel Socialite, observer pattern design
+
+--- Login Google: Google Developer Console
+
+--- Laravel Socialite: composer require laravel/socialite
 
 
-
-
+--- Observer Pattern Design: 
+	php artisan make:observer ProductObserver --model=Product
 
 
 

@@ -2,15 +2,16 @@
 
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\GoogleController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\OrderController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
-
+use Laravel\Socialite\Facades\Socialite;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,8 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-require __DIR__ . '/auth.php';
 
+require __DIR__ . '/auth.php';
 
 Route::get('home', [HomeController::class, 'index'])->name('home');
 
@@ -55,7 +56,8 @@ Route::get('product-list', function () {
 });
 Route::get('product/{slug}', [ClientProductController::class, 'getProductBySlug'])->name('product.detail');
 
-// CheckOut
+
+
 Route::get('checkout', [OrderController::class, 'index'])->name('checkout');
 
 
@@ -107,5 +109,12 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
         ->name('product_category.delete');
 });
 
-require __DIR__ . '/cart/web.php';
+// Google Developer Socialite
 
+
+
+Route::get('google/redirect', [GoogleController::class, 'redirect'])->name('google.redirect');
+
+Route::get('google/callback', [GoogleController::class, 'callback'])->name('google.callback');
+
+require __DIR__ . '/cart/web.php';

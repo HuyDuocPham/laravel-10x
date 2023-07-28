@@ -3,7 +3,9 @@
 namespace App\Listeners;
 
 use App\Events\OrderSuccessEvent;
-use App\Mail\OrderAdminEmail;
+use App\Mail\OrderEmail;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
 
 class SendEmailToCustomerWhenOrderSuccess
@@ -23,6 +25,6 @@ class SendEmailToCustomerWhenOrderSuccess
     {
         $order = $event->order;
 
-        Mail::to('huyduocphamm@gmail.com')->send(new OrderAdminEmail($order));
+        Mail::to('huyduocphamm@gmail.com')->send(new OrderEmail($order));
     }
 }

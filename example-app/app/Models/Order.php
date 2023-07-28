@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Order extends Model
 {
     use HasFactory, SoftDeletes;
-
     protected $table = 'order';
+
     const STATUS_PENDING = 'pending';
+    const STATUS_SUCCESS = 'success';
     const STATUS_CANCEL = 'cancel';
-    const STATUS_FAILED = 'failed';
     const STATUS_SHIPPING = 'shipping';
+    const STATUS_FAILED = 'failed';
 
     protected $fillable = [
         'user_id',
@@ -37,8 +38,8 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'order_id');
     }
 
-    public function user()
-    {
+    public function user(){
         return $this->belongsTo(User::class, 'user_id');
     }
 }
+
