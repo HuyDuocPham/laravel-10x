@@ -2,16 +2,13 @@
 
 use App\Http\Controllers\Admin\ProductCategoryController;
 use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\GoogleController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\OrderController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Client\ProductController as ClientProductController;
 use App\Http\Controllers\ProfileController;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Laravel\Socialite\Facades\Socialite;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -107,14 +104,22 @@ Route::middleware('auth.admin')->name('admin.')->group(function () {
 
     Route::post('admin/product_category/delete/{id}', [ProductCategoryController::class, 'destroy'])
         ->name('product_category.delete');
+
+
+
+    Route::get('admin/pages/dashboard.googlechart', [DashboardController::class, 'index'])->name('pages.google_chart');
+
+    // Upload Image
+    Route::post('product-upload-image', [ProductController::class, 'uploadImage'])->name('product.image.upload');
 });
 
 // Google Developer Socialite
-
-
-
 Route::get('google/redirect', [GoogleController::class, 'redirect'])->name('google.redirect');
-
 Route::get('google/callback', [GoogleController::class, 'callback'])->name('google.callback');
+
+
+
+
+
 
 require __DIR__ . '/cart/web.php';

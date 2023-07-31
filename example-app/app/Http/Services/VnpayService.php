@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Http\Services;
@@ -7,7 +8,8 @@ use App\Models\Order;
 
 class VnpayService
 {
-    public function getVnpayUrl(Order $order, $paymentMethod): string{
+    public function getVnpayUrl(Order $order, $paymentMethod): string
+    {
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $vnp_TxnRef = (string)$order->id; //Mã giao dịch thanh toán tham chiếu của merchant
         $vnp_Amount = (string)$order->total; // Số tiền thanh toán
@@ -17,12 +19,12 @@ class VnpayService
         $vnp_Returnurl = route('cart.callback-vnpay');
 
         $startTime = date("YmdHis");
-        $expire = date('YmdHis',strtotime('+15 minutes',strtotime($startTime)));
+        $expire = date('YmdHis', strtotime('+15 minutes', strtotime($startTime)));
 
         $inputData = array(
             "vnp_Version" => "2.1.0",
             "vnp_TmnCode" => env('VNP_TMNCODE'),
-            "vnp_Amount" => $vnp_Amount * 10000 ,
+            "vnp_Amount" => $vnp_Amount * 10000,
             "vnp_Command" => "pay",
             "vnp_CreateDate" => date('YmdHis'),
             "vnp_CurrCode" => "VND",
@@ -53,8 +55,8 @@ class VnpayService
             $query .= urlencode($key) . "=" . urlencode($value) . '&';
         }
 
-        $vnp_Url = env('VNP_URL'). "?" . $query;
-        $vnpSecureHash = hash_hmac('sha512', $hashdata, env('VNP_HASHSECRET'));//
+        $vnp_Url = env('VNP_URL') . "?" . $query;
+        $vnpSecureHash = hash_hmac('sha512', $hashdata, env('VNP_HASHSECRET')); //
         $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         return $vnp_Url;
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Client;
 
 use App\Events\OrderSuccessEvent;
 use App\Http\Controllers\Controller;
+use App\Http\Repositories\ProductRepository;
 use App\Http\Services\VnpayService;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -18,29 +19,38 @@ use Illuminate\Support\Facades\Redirect;
 
 class CartController extends Controller
 {
-    //Dependency Injection
+    //DI: Dependency Injection
     private $vnpayService;
-    public function __construct(VnpayService $vnpayService){
+
+    private $productRepository;
+    public function __construct(VnpayService $vnpayService, ProductRepository $productRepository)
+    {
         $this->vnpayService = $vnpayService;
+        $this->productRepository = $productRepository;
     }
 
 
-    public function index(){
+    public function index()
+    {
         $cart = session()->get('cart') ?? [];
-        return view('client.pages.cart', compact('cart'));
+
+        // $products = Product::latest()->take($5)->get();
+        $products = $this->productRepository->getTopProducts(5);
+        return view('client.pages.cart', compact('cart', 'products'));
     }
-    public function addProductToCart($productId, $qty = 1){
+    public function addProductToCart($productId, $qty = 1)
+    {
         $product = Product::find($productId);
-        if($product){
+        if ($product) {
             $cart = session()->get('cart') ?? [];
 
             $imageLink = (is_null($product->image_url) || !file_exists("images/" . $product->image_url))
-            ? 'default-product-image.png' : $product->image_url;
+                ? 'default-product-image.png' : $product->image_url;
 
             $cart[$product->id]  = [
                 'name' => $product->name,
                 'price' => $product->price,
-                'image_url' => asset('images/'.$imageLink),
+                'image_url' => asset('images/' . $imageLink),
                 'qty' => ($cart[$productId]['qty'] ?? 0) + $qty
             ];
             //Add cart into session
@@ -49,25 +59,27 @@ class CartController extends Controller
             $totalPrice = $this->calculateTotalPrice($cart);
 
             return response()->json(['message' => 'Add product success!', 'total_product' => $totalProduct, 'total_price' =>  $totalPrice]);
-        }else{
+        } else {
             return response()->json(['message' => 'Add product failed!'], Response::HTTP_NOT_FOUND);
         }
     }
 
-    public function calculateTotalPrice(array $cart){
+    public function calculateTotalPrice(array $cart)
+    {
         $totalPrice = 0;
-        foreach($cart as $item){
+        foreach ($cart as $item) {
             $totalPrice += $item['qty'] * $item['price'];
         }
         return number_format($totalPrice, 2);
     }
 
-    public function deleteProductInCart($productId){
+    public function deleteProductInCart($productId)
+    {
         $cart = session()->get('cart') ?? [];
-        if(array_key_exists($productId, $cart)){
+        if (array_key_exists($productId, $cart)) {
             unset($cart[$productId]);
             session()->put('cart', $cart);
-        }else{
+        } else {
             return response()->json(['message' => 'Remove product failed!'], Response::HTTP_BAD_REQUEST);
         }
         $totalProduct = count($cart);
@@ -75,11 +87,12 @@ class CartController extends Controller
         return response()->json(['message' => 'Remove product success!', 'total_product' => $totalProduct, 'total_price' =>  $totalPrice]);
     }
 
-    public function updateProductInCart($productId, $qty){
+    public function updateProductInCart($productId, $qty)
+    {
         $cart = session()->get('cart') ?? [];
-        if(array_key_exists($productId, $cart)){
+        if (array_key_exists($productId, $cart)) {
             $cart[$productId]['qty'] = $qty;
-            if(!$qty){
+            if (!$qty) {
                 unset($cart[$productId]);
             }
             session()->put('cart', $cart);
@@ -89,20 +102,22 @@ class CartController extends Controller
         return response()->json(['message' => 'Update product success!', 'total_product' => $totalProduct, 'total_price' =>  $totalPrice]);
     }
 
-    public function deleteCart(){
+    public function deleteCart()
+    {
         session()->put('cart', []);
         return response()->json(['message' => 'Delete cart success!', 'total_product' => 0, 'total_price' => 0]);
     }
 
-    public function placeOrder(Request $request){
+    public function placeOrder(Request $request)
+    {
         //Validate from request
-        try{
+        try {
             DB::beginTransaction();
 
             //Calculate total price in cart
             $cart = session()->get('cart', []);
             $totalPrice = 0;
-            foreach($cart as $item){
+            foreach ($cart as $item) {
                 $totalPrice += $item['qty'] * $item['price'];
             }
 
@@ -119,7 +134,7 @@ class CartController extends Controller
             ]);
 
             //Create record order items
-            foreach($cart as $productId => $item){
+            foreach ($cart as $productId => $item) {
                 $orderItem = OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $productId,
@@ -144,36 +159,36 @@ class CartController extends Controller
             //Reset session
             session()->put('cart', []);
 
-            if(in_array($request->payment_method, ['vnpay_atm', 'vnpay_credit'])){
+            if (in_array($request->payment_method, ['vnpay_atm', 'vnpay_credit'])) {
                 $vnp_Url = $this->vnpayService->getVnpayUrl($order, $request->payment_method);
                 return Redirect::to($vnp_Url);
-            }else{
+            } else {
                 event(new OrderSuccessEvent($order));
             }
 
             DB::commit();
-        }catch(\Exception $message){
+        } catch (\Exception $message) {
             DB::rollBack();
         }
 
         return redirect()->route('home')->with('msg', 'Order Success!');
     }
 
-    public function callBackVnpay(Request $request){
+    public function callBackVnpay(Request $request)
+    {
         $order = Order::find($request->vnp_TxnRef);
-        if($request->vnp_ResponseCode === '00'){
+        if ($request->vnp_ResponseCode === '00') {
             //Create event order success
-            if($order){
+            if ($order) {
                 event(new OrderSuccessEvent($order));
             }
-        }else if($request->vnp_ResponseCode === '10'){
-            if($order){
+        } else if ($request->vnp_ResponseCode === '10') {
+            if ($order) {
                 $order->status = 'cancel';
                 $orderPaymentMethod = $order->order_payment_methods[0];
                 $orderPaymentMethod->status = 'cancel';
                 // $orderPaymentMethod->note = 'Giao dịch không thành công do: Khách hàng xác thực thông tin thẻ/tài khoản không đúng quá 3 lần';
             }
         }
-
     }
 }

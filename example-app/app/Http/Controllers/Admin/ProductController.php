@@ -84,8 +84,8 @@ class ProductController extends Controller
         // //use Illuminate\Support\Facades\Pipeline;
 
         $pipeline = Pipeline::send(Product::query()->withTrashed())
-        ->through($pipelines)
-        ->thenReturn();
+            ->through($pipelines)
+            ->thenReturn();
 
         //use Illuminate\Pipeline\Pipeline
         // $pipeline = app(PipelinePipeline::class)
@@ -105,12 +105,14 @@ class ProductController extends Controller
         $maxPrice = Product::max('price');
         $minPrice = Product::min('price');
 
-        return view('admin.product.list',
-        [
-            'products' => $products,
-            'maxPrice' => $maxPrice,
-            'minPrice' => $minPrice
-        ]);
+        return view(
+            'admin.product.list',
+            [
+                'products' => $products,
+                'maxPrice' => $maxPrice,
+                'minPrice' => $minPrice
+            ]
+        );
     }
 
     /**
@@ -190,7 +192,7 @@ class ProductController extends Controller
         // $product = Product::find($id);
         $productCategories = ProductCategory::where('status', 1)->get();
 
-	    return view('admin.product.edit', ['product' => $product, 'productCategories' => $productCategories]);
+        return view('admin.product.edit', ['product' => $product, 'productCategories' => $productCategories]);
     }
 
     /**
@@ -206,7 +208,7 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-         //validate
+        //validate
         //  $request->validate([
         //     'name' => 'required',
         //     'product_category_id' => 'required'
@@ -248,7 +250,6 @@ class ProductController extends Controller
         $message = $check ? 'update success' : 'update failed';
 
         return redirect()->route('admin.product.index')->with('message', $message);
-
     }
 
     /**
@@ -264,12 +265,29 @@ class ProductController extends Controller
         return redirect()->route('admin.product.index')->with('message', $message);
     }
 
-    public function restore(string $product){
+    public function restore(string $product)
+    {
         $product = Product::withTrashed()->find($product);
         // $product->deleted_at = null;
         // $product->save();
         $product->restore();
 
         return redirect()->route('admin.product.index')->with('message', 'Restore success');
+    }
+
+
+    public function uploadImage(Request $request)
+    {
+        if ($request->hasFile('upload')) {
+            $originName = $request->file('upload')->getClientOriginalName();
+            $fileName = pathinfo($originName, PATHINFO_FILENAME);
+            $extension = $request->file('upload')->getClientOriginalExtension();
+            $fileName = $fileName . '_' . time() . '.' . $extension;
+
+            $request->file('upload')->move(public_path('images'), $fileName);
+
+            $url = asset('images/' . $fileName);
+            return response()->json(['fileName' => $fileName, 'uploaded' => 1, 'url' => $url]);
+        }
     }
 }

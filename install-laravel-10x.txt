@@ -554,20 +554,45 @@ Buoi 20: Login Google, Laravel Socialite, observer pattern design
 
 
 
+Buoi 21: Upload image, Repository Pattern, Google Chart, API (postman)
+
+-- Repository Pattern: App\Http\Repositories;
+
+### API (postman): https://www.postman.com/downloads/
+	- Application Programing Interface
+	- Dowmload : https://www.postman.com/downloads/
+	- rss vnexpress: https://vnexpress.net/rss
+			-> https://vnexpress.net/rss/tin-moi-nhat.rss
+
+	- php artisan make:controller API\V1\ProductController --api
+				// php artisan make:controller API\V1\ProductController
+				// php artisan make:controller API\V1\ProductController --resource
+
+	- php artisan route:list --path=api
 
 
 
+
+
+### Google Chart: https://developers.google.com/chart/interactive/docs/gallery
+
+
+db:seed: factories + seeders
 
 
 
 DO AN
+.zipp
 1, ERD
 2, Slide
 3. Source code
 3. Source code + slide + ERD -> compress -> classroom(link)
 
 
+-- Sử dụng thư viện: 
 
+
+-- JSON & XMLparser
 
 
 

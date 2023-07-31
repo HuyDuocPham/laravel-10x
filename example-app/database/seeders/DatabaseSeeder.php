@@ -18,6 +18,12 @@ class DatabaseSeeder extends Seeder
         \App\Models\ProductCategory::factory(18)->create();
         \App\Models\Product::factory(500)->create();
 
+        \App\Models\Order::factory(10)->create();
+        \App\Models\OrderItem::factory(10)->create();
+        \App\Models\OrderPaymentMethod::factory(10)->create();
+        
+        
+
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
