@@ -581,6 +581,24 @@ db:seed: factories + seeders
 
 
 
+Buoi 22(END): Download Postman, Json Editor
+php artisan make:resource ProductResource 
+php artisan make:resource ProductCategoryResource
+php artisan make:request Api/V1/ProductStoreRequest
+
+
+### API
+### REST : 6 constraint
+	HTTP:
+	GET: retrieve record
+	POST: create record
+	PUT: update record
+	PATCH: update record
+	DELETE: delete record
+
+### Rest Api/Restfull Api   ???
+
+
 DO AN
 .zipp
 1, ERD
@@ -589,7 +607,7 @@ DO AN
 3. Source code + slide + ERD -> compress -> classroom(link)
 
 
--- Sử dụng thư viện: 
+-- Sử dụng thư viện ??  :   GHI NGUỒN
 
 
 -- JSON & XMLparser

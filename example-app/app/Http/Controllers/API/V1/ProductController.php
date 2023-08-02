@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\API\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -14,7 +16,8 @@ class ProductController extends Controller
     public function index()
     {
 
-        return Product::all();
+        $datas = Product::take(5)->get();
+        return ProductResource::collection($datas);
     }
 
     /**
@@ -22,15 +25,24 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $errors = Validator::make($request->all(), [
+            'name' => 'required',
+            'price' => 'required',
+        ]);
+
+        if ($errors->fails()) {
+            return response()->json(['message' => 'NOT OK', 'errors' => $errors->errors()], 400);
+        }
+        dd($request->all());
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Product $product)
     {
-        //
+        return ProductResource::make($product);
     }
 
     /**
