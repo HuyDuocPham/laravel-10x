@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Order Email</title>
 </head>
+
+
 <body>
-    <h1>Order Email</h1>
-    <table>
-        <tr>
+    <h1>Your Order</h1>
+    <table border="1">
+        <tr style="color: red">
             <th>STT</th>
             <th>Product Name</th>
             <th>Product Price</th>
@@ -26,7 +29,7 @@
                 <td>{{ number_format($item->qty * $item->price, 2) }}</td>
             </tr>
             @php
-                $total += $item->qty * $item->price
+                $total += $item->qty * $item->price;
             @endphp
         @endforeach
         <tr>
@@ -34,6 +37,7 @@
             <td colspan="4">{{ number_format($total, 2) }}</td>
         </tr>
     </table>
-</body>
-</html>
 
+</body>
+
+</html>

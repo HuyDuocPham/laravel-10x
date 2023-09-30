@@ -21,9 +21,6 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // View::composer('*', function ($view) {
-        //     $view->with('nguyenvanb', 'Nguyen Van C');
-        // });
         $arrayViewProductCategory = [
             'client.pages.home',
             'client.pages.product_detail'

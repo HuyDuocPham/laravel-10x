@@ -1,0 +1,22 @@
+1, Bật xác minh 2 bước mail google
+2, Lấy mật khẩu --> file .env
+
+Cách 1:
+# MAIL_MAILER=smtp
+# MAIL_HOST=smtp.gmail.com
+# MAIL_PORT=587
+# MAIL_USERNAME=huyduocphamm@gmail.com
+# MAIL_PASSWORD=irogvgqybhynirxx
+# MAIL_ENCRYPTION=tls
+# MAIL_FROM_ADDRESS="huyduocphamm@gmail.com"
+# MAIL_FROM_NAME="${APP_NAME}"
+
+Cách 2:
+MAIL_MAILER=smtp
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=465
+MAIL_USERNAME=huyduocphamm@gmail.com
+MAIL_PASSWORD=rcdopdibdklhkxac
+MAIL_ENCRYPTION=ssl
+MAIL_FROM_ADDRESS="huyduocphamm@gmail.com"
+MAIL_FROM_NAME="GA-Shop"

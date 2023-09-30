@@ -167,11 +167,15 @@ class CartController extends Controller
             }
 
             DB::commit();
+
+
+
+            return redirect()->route('home')->with('message', 'Order Success!');
+
         } catch (\Exception $message) {
             DB::rollBack();
         }
 
-        return redirect()->route('home')->with('msg', 'Order Success!');
     }
 
     public function callBackVnpay(Request $request)

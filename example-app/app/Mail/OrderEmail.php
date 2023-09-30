@@ -29,7 +29,7 @@ class OrderEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Order Email',
+            subject: 'Mail confirm order from GA-Shop.',
         );
     }
 
