@@ -47,7 +47,7 @@ class CartController extends Controller
             $imageLink = (is_null($product->image_url) || !file_exists("images/" . $product->image_url))
                 ? 'default-product-image.png' : $product->image_url;
 
-            $cart[$product->id]  = [
+            $cart[$product->id] = [
                 'name' => $product->name,
                 'price' => $product->price,
                 'image_url' => asset('images/' . $imageLink),
@@ -58,7 +58,7 @@ class CartController extends Controller
             $totalProduct = count($cart);
             $totalPrice = $this->calculateTotalPrice($cart);
 
-            return response()->json(['message' => 'Add product success!', 'total_product' => $totalProduct, 'total_price' =>  $totalPrice]);
+            return response()->json(['message' => 'Add product success!', 'total_product' => $totalProduct, 'total_price' => $totalPrice]);
         } else {
             return response()->json(['message' => 'Add product failed!'], Response::HTTP_NOT_FOUND);
         }
@@ -84,7 +84,7 @@ class CartController extends Controller
         }
         $totalProduct = count($cart);
         $totalPrice = $this->calculateTotalPrice($cart);
-        return response()->json(['message' => 'Remove product success!', 'total_product' => $totalProduct, 'total_price' =>  $totalPrice]);
+        return response()->json(['message' => 'Remove product success!', 'total_product' => $totalProduct, 'total_price' => $totalPrice]);
     }
 
     public function updateProductInCart($productId, $qty)
@@ -99,7 +99,7 @@ class CartController extends Controller
         }
         $totalProduct = count($cart);
         $totalPrice = $this->calculateTotalPrice($cart);
-        return response()->json(['message' => 'Update product success!', 'total_product' => $totalProduct, 'total_price' =>  $totalPrice]);
+        return response()->json(['message' => 'Update product success!', 'total_product' => $totalProduct, 'total_price' => $totalPrice]);
     }
 
     public function deleteCart()
@@ -146,7 +146,7 @@ class CartController extends Controller
 
             //Create records into table OrderPaymentMethod
             $orderPaymentMethod = OrderPaymentMethod::create([
-                'order_id' =>  $order->id,
+                'order_id' => $order->id,
                 'payment_provider' => $request->get('payment_method'),
                 'total_balance' => $totalPrice,
                 'status' => OrderPaymentMethod::STATUS_PENDING,
@@ -159,6 +159,8 @@ class CartController extends Controller
             //Reset session
             session()->put('cart', []);
 
+            DB::commit();
+
             if (in_array($request->payment_method, ['vnpay_atm', 'vnpay_credit'])) {
                 $vnp_Url = $this->vnpayService->getVnpayUrl($order, $request->payment_method);
                 return Redirect::to($vnp_Url);
@@ -166,14 +168,14 @@ class CartController extends Controller
                 event(new OrderSuccessEvent($order));
             }
 
-            DB::commit();
-
+            // event(new OrderSuccessEvent($order));??????
 
 
             return redirect()->route('home')->with('message', 'Order Success!');
 
         } catch (\Exception $message) {
             DB::rollBack();
+            dd($message->getMessage());
         }
 
     }

@@ -1,0 +1,46 @@
+Order:
+
+###: Design Pattern: 
+- Event
+	php artisan make:event NameEvent
+- Listener
+	php artisan make:listener NameListener
+
+
+### VNPAY
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
